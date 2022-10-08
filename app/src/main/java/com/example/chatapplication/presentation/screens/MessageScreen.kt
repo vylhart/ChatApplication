@@ -116,7 +116,6 @@ fun PreviewScreen(){
         messageId = "fsdfds",
         senderId = "sdfsdf",
         data = "sdfsdf",
-        date = "dsfsdf"
     )
     Column(modifier = Modifier.fillMaxSize()) {
         ListItem(message = msg, featureColor = getFeatureColor(), alignRight = true)

@@ -34,11 +34,12 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
     fun sendMessage(text: String){
         viewModelScope.launch {
             useCases.sendMessage(
-                channel = state.value.channelId,
                 message =  Message(
                     senderId = state.value.userId,
+                    channelId = state.value.channelId,
                     messageId = UUID.randomUUID().toString(),
-                    data = text
+                    data = text,
+                    date = System.currentTimeMillis()
                 )
             ).collect{
                 getMessages()
@@ -47,12 +48,9 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
 
     }
 
-    fun deleteMessage(messageID: String){
+    fun deleteMessage(message: Message){
         viewModelScope.launch {
-            useCases.deleteMessage(
-                channel = state.value.channelId,
-                messageId = messageID
-            )
+            useCases.deleteMessage(message)
         }
     }
 

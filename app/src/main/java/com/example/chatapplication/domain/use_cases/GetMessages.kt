@@ -13,8 +13,9 @@ class GetMessages @Inject constructor(private val repository: MessageRepository)
     operator fun invoke(channel: String):Flow<Resource<List<Message>>> = flow {
         try{
             emit(Resource.Loading)
-            val list =  repository.getMessages(channel)
-            emit(Resource.Success(data = list))
+            repository.getMessages(channel).collect{ list->
+                emit(Resource.Success(data = list))
+            }
         }
         catch (e: Exception){
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error"))
