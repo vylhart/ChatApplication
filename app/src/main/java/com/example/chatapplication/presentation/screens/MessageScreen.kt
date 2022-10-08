@@ -1,45 +1,53 @@
 package com.example.chatapplication.presentation.screens
 
-import android.util.Log
-import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Button
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.domain.model.Message
+import com.example.chatapplication.presentation.composables.FeatureColor
+import com.example.chatapplication.presentation.composables.getFeatureColor
+import com.example.chatapplication.presentation.composables.getFeaturePath
 import com.example.chatapplication.presentation.viewmodels.MessageViewModel
 
-@Composable
-fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel ){
-    val state by viewModel.state.collectAsState()
 
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-        Column(modifier = Modifier.fillMaxWidth()) {
-            Text(text =   state.userId+state.messages.size+state.channelId+state.error)
-            Button(onClick = {
-                viewModel.onClick()
-            }) {
-                Text(text = "click")
-            }
-            LazyColumn(modifier = Modifier.fillMaxWidth()){
+@Composable
+fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel){
+    val state by viewModel.state.collectAsState()
+    val featureColor = getFeatureColor()
+    var messageText by remember { mutableStateOf("") }
+    BoxWithConstraints(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = featureColor.darkColor),
+    ){
+        val feature = getFeaturePath(constraints)
+        Canvas(
+            modifier = Modifier.fillMaxSize()
+        ){
+            drawPath(path = feature.mediumPath, color = featureColor.mediumColor)
+            drawPath(path = feature.lightPath, color = featureColor.lightColor)
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(5.dp),
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxWidth().weight(13f)){
                 items(state.messages){ msg ->
-                    Log.d(TAG, "MessageScreen: "+msg.messageId)
-                    ListItem(msg)
+                    ListItem(msg, featureColor, msg.senderId==state.userId)
                 }
             }
             if(state.error.isNotBlank()) {
@@ -54,17 +62,64 @@ fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel 
             }
             if(state.isLoading) {
                 CircularProgressIndicator()
-                Log.d(TAG, "MessageScreen: loading")
+            }
+            Row(
+                modifier = Modifier.weight(1f)
+            ) {
+                OutlinedTextField(
+                    value = messageText,
+                    onValueChange = {messageText=it},
+                    modifier = Modifier.weight(4f)
+                )
+                Button(
+                    onClick = {
+                        viewModel.sendMessage(messageText)
+                        messageText = ""
+                    },
+                    modifier = Modifier.weight(1f),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = featureColor.extraDarkColor)
+                ) {
+                    Text(text = "Send")
+                }
             }
 
         }
+
     }
 }
 
 @Composable
-fun ListItem(message: Message){
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Text(text = "item"+message.messageId)
+fun ListItem(message: Message, featureColor: FeatureColor, alignRight: Boolean){
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        horizontalArrangement = if(alignRight) Arrangement.End else Arrangement.Start
+
+    ) {
+        Text(text = message.data,
+            color = Color.White,
+            fontSize = MaterialTheme.typography.subtitle1.fontSize,
+            modifier = Modifier
+                .background(
+                    shape = RoundedCornerShape(10.dp),
+                    color = featureColor.extraDarkColor
+                ).padding(10.dp)
+        )
+    }
+    Spacer(modifier = Modifier.padding(5.dp))
+}
+
+@Composable
+@Preview(showBackground = true)
+fun PreviewScreen(){
+    val msg = Message(
+        messageId = "fsdfds",
+        senderId = "sdfsdf",
+        data = "sdfsdf",
+        date = "dsfsdf"
+    )
+    Column(modifier = Modifier.fillMaxSize()) {
+        ListItem(message = msg, featureColor = getFeatureColor(), alignRight = true)
     }
 }
 
