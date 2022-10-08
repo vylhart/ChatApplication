@@ -10,9 +10,11 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.chatapplication.presentation.composables.ChatNavigation
 import com.example.chatapplication.presentation.theme.ChatApplicationTheme
+import com.example.chatapplication.presentation.viewmodels.MessageViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -24,7 +26,8 @@ class MainActivity : ComponentActivity() {
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background) {
                         val navController = rememberNavController()
-                        ChatNavigation(navController = navController)
+                        val viewModel: MessageViewModel = hiltViewModel()
+                        ChatNavigation(navController = navController, viewModel)
                 }
             }
         }
