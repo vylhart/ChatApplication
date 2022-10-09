@@ -42,7 +42,7 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
                     date = System.currentTimeMillis()
                 )
             ).collect{
-                getMessages()
+                //getMessages()
             }
         }
 

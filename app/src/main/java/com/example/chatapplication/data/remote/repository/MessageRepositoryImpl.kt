@@ -6,6 +6,7 @@ import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
 import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.util.Listener
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -14,7 +15,19 @@ import kotlinx.coroutines.tasks.await
 class MessageRepositoryImpl (private val collection: CollectionReference): MessageRepository {
 
     override suspend fun getMessages(channel: String): Flow<List<Message>> = flow {
-        val list = collection
+
+        val ref = collection.document(channel).collection(Constants.COLLECTION_CHANNEL).orderBy("date")
+        val list = mutableListOf<Message>()
+        ref.addSnapshotListener{ snapshot, e ->
+            snapshot?.let {
+                for(item in snapshot){
+                    val msg = item.toObject(Message::class.java)
+                    list.add(msg)
+                }
+            }
+
+        }
+        /*val list = collection
             .document(channel)
             .collection(Constants.COLLECTION_CHANNEL)
             .orderBy("date")
@@ -22,8 +35,9 @@ class MessageRepositoryImpl (private val collection: CollectionReference): Messa
             .await()
             .map {
                 it.toObject(Message::class.java)
-        }
+        }*/
         emit(list)
+        list.clear()
     }
 
     override suspend fun deleteMessage(message: Message){

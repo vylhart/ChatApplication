@@ -1,6 +1,5 @@
 package com.example.chatapplication.domain.use_cases
 
-
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
