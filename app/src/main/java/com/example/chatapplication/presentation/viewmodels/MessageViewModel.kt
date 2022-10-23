@@ -20,7 +20,7 @@ import javax.inject.Inject
 class MessageViewModel @Inject constructor(private val useCases: UseCases): ViewModel() {
 
 
-    private val _state = MutableStateFlow<ChannelState>(ChannelState())
+    private val _state = MutableStateFlow(ChannelState())
     val state : StateFlow<ChannelState> = _state
 
 
@@ -29,9 +29,11 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
         Log.d(TAG, "enterChannel: $channel")
         _state.value = ChannelState(channelId = channel, userId = userId)
         getMessages()
+
     }
 
     fun sendMessage(text: String){
+        Log.d(TAG, "sendMessage: sending")
         viewModelScope.launch {
             useCases.sendMessage(
                 message =  Message(
@@ -55,6 +57,9 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
     }
 
     private fun getMessages(){
+        viewModelScope.launch{
+            useCases.fetchMessages(state.value.channelId)
+        }
         useCases.getMessages(state.value.channelId).onEach { result ->
             when(result){
                 is Resource.Success -> {
