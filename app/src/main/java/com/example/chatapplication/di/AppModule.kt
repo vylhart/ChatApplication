@@ -35,7 +35,7 @@ object AppModule {
             deleteMessage = DeleteMessage(repository, workerUtils),
             sendMessage = SendMessage(repository, workerUtils),
             getMessages = GetMessages(repository, workerUtils),
-            fetchMessages = FetchMessages(repository, remoteRepository , workerUtils)
+            fetchMessages = FetchMessages(repository, remoteRepository)
         )
     }
 
@@ -49,6 +49,12 @@ object AppModule {
     @Provides
     fun provideLocalMessageRepository(db: MessageDatabase): MessageRepository {
         return MessageLocalRepositoryImpl(db.messageDao)
+    }
+
+    @Singleton
+    @Provides
+    fun provideRemoteMessageRepository(collection: CollectionReference): MessageRemoteRepositoryImpl {
+        return MessageRemoteRepositoryImpl(collection)
     }
 
     @Singleton

@@ -13,8 +13,7 @@ import javax.inject.Inject
 
 class FetchMessages @Inject constructor(
     private val localRepository: MessageRepository,
-    private val remoteRepository: MessageRemoteRepositoryImpl,
-    private val workerUtils: WorkerUtils) {
+    private val remoteRepository: MessageRemoteRepositoryImpl) {
     suspend operator fun invoke(channel: String) {
         Log.d(TAG, "invoke: fetch")
         try{

@@ -19,11 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MessageViewModel @Inject constructor(private val useCases: UseCases): ViewModel() {
 
-
     private val _state = MutableStateFlow(ChannelState())
     val state : StateFlow<ChannelState> = _state
-
-
 
     fun enterChannel(channel: String, userId: String){
         Log.d(TAG, "enterChannel: $channel")
@@ -47,7 +44,6 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
                 //getMessages()
             }
         }
-
     }
 
     fun deleteMessage(message: Message){

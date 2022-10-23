@@ -33,11 +33,4 @@ object WorkManagerInitializer : Initializer<WorkManager> {
         // No dependencies on other libraries.
         return emptyList()
     }
-
-    @Singleton
-    @Provides
-    fun provideRemoteMessageRepository(collection: CollectionReference, messageRepository: MessageRepository): MessageRemoteRepositoryImpl {
-        return MessageRemoteRepositoryImpl(collection, messageRepository)
-    }
-
 }

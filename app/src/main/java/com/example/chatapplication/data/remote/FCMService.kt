@@ -1,4 +1,4 @@
-package com.example.chatapplication.data.remote.repository
+package com.example.chatapplication.data.remote
 
 
 import android.util.Log

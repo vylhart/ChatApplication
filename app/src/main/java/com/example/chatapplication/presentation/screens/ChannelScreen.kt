@@ -37,6 +37,7 @@ fun ChannelScreen(navController: NavHostController, viewModel: MessageViewModel 
             drawPath(path = feature.mediumPath, color = featureColor.mediumColor)
             drawPath(path = feature.lightPath, color = featureColor.lightColor)
         }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
