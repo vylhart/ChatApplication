@@ -11,12 +11,13 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.presentation.composables.BackGroundCompose
+import com.example.chatapplication.presentation.composables.ErrorText
 import com.example.chatapplication.presentation.composables.FeatureColor
+import com.example.chatapplication.presentation.viewmodels.ChannelState
 import com.example.chatapplication.presentation.viewmodels.MessageViewModel
 
 
@@ -24,33 +25,19 @@ import com.example.chatapplication.presentation.viewmodels.MessageViewModel
 fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel){
     val state by viewModel.state.collectAsState()
     var messageText by remember { mutableStateOf("") }
+
     BackGroundCompose {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(5.dp),
+            modifier = Modifier.fillMaxSize().padding(5.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
-            LazyColumn(modifier = Modifier
-                .fillMaxWidth()
-                .weight(13f)){
+
+            LazyColumn(modifier = Modifier.fillMaxWidth().weight(13f)){
                 items(state.messages){ msg ->
                     ListItem(msg, it, msg.senderId==state.userId)
                 }
             }
-            if(state.error.isNotBlank()) {
-                Text(
-                    text = state.error,
-                    color = MaterialTheme.colors.error,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                )
-            }
-            if(state.isLoading) {
-                CircularProgressIndicator()
-            }
+
             Row(
                 modifier = Modifier.weight(1f)
             ) {
@@ -69,6 +56,8 @@ fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel)
                 )
             }
 
+            HandleMessageState(state = state)
+
         }
     }
 }
@@ -76,10 +65,8 @@ fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel)
 @Composable
 fun ListItem(message: Message, featureColor: FeatureColor, alignRight: Boolean){
     Row(
-        modifier = Modifier
-            .fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if(alignRight) Arrangement.End else Arrangement.Start
-
     ) {
         Text(text = message.data,
             color = Color.White,
@@ -95,3 +82,12 @@ fun ListItem(message: Message, featureColor: FeatureColor, alignRight: Boolean){
     Spacer(modifier = Modifier.padding(5.dp))
 }
 
+@Composable
+fun HandleMessageState(state: ChannelState) {
+    if(state.error.isNotBlank()) {
+        ErrorText(error = state.error)
+    }
+    if(state.isLoading) {
+        CircularProgressIndicator()
+    }
+}

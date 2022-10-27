@@ -5,9 +5,6 @@ import android.util.Log
 import androidx.startup.Initializer
 import androidx.work.Configuration
 import androidx.work.WorkManager
-import com.example.chatapplication.data.remote.repository.MessageRemoteRepositoryImpl
-import com.example.chatapplication.domain.repository.MessageRepository
-import com.google.firebase.firestore.CollectionReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

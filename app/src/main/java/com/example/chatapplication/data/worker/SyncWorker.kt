@@ -6,7 +6,6 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.chatapplication.common.Constants.TAG
-import com.example.chatapplication.data.local.repository.MessageLocalRepositoryImpl
 import com.example.chatapplication.data.remote.repository.MessageRemoteRepositoryImpl
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_DELETE
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_FETCH
@@ -21,7 +20,6 @@ import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import kotlin.math.log
 
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
