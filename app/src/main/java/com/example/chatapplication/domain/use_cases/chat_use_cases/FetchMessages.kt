@@ -1,4 +1,4 @@
-package com.example.chatapplication.domain.use_cases
+package com.example.chatapplication.domain.use_cases.chat_use_cases
 
 import android.util.Log
 import com.example.chatapplication.common.Constants.TAG

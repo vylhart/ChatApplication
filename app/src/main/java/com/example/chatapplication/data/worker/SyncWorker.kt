@@ -35,53 +35,47 @@ class SyncWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         try {
             val action = inputData.getString(KEY_ACTION)
+            val messageId = inputData.getString(KEY_MESSAGEID)
+            val channelId = inputData.getString(KEY_CHANNELID)
+            val senderId = inputData.getString(KEY_SENDERID)
+            val data = inputData.getString(KEY_DATA)
+            val date = inputData.getLong(KEY_DATE, 0)
             Log.d(TAG, "doWork: $action")
-            return when (action) {
-                ACTION_SEND -> {
-                    val messageId = inputData.getString(KEY_MESSAGEID)
-                    val channelId = inputData.getString(KEY_CHANNELID)
-                    val senderId = inputData.getString(KEY_SENDERID)
-                    val data = inputData.getString(KEY_DATA)
-                    val date = inputData.getLong(KEY_DATE, 0)
-                    if (channelId != null && messageId != null && senderId != null && data != null) {
-                        val message = Message(messageId = messageId, channelId = channelId, senderId= senderId, data = data, date = date)
-                        messageRemoteRepository.sendMessage(message)
+
+            channelId?.let{
+                return when (action) {
+                    ACTION_SEND -> {
+                        if (messageId != null && senderId != null && data != null) {
+                            val message = Message(messageId = messageId, channelId = it, senderId= senderId, data = data, date = date)
+                            messageRemoteRepository.sendMessage(message)
+                        }
+                        Result.success()
                     }
-                    Result.success()
-                }
-                ACTION_DELETE -> {
-                    val messageId = inputData.getString(KEY_MESSAGEID)
-                    val channelId = inputData.getString(KEY_CHANNELID)
-                    val senderId = inputData.getString(KEY_SENDERID)
-                    val data = inputData.getString(KEY_DATA)
-                    val date = inputData.getLong(KEY_DATE, 0)
-                    if (channelId != null && messageId != null && senderId != null && data != null) {
-                        val message = Message(messageId = messageId, channelId = channelId, senderId= senderId, data = data, date = date)
-                        messageRemoteRepository.deleteMessage(message)
+                    ACTION_DELETE -> {
+                        if (messageId != null && senderId != null && data != null) {
+                            val message = Message(messageId = messageId, channelId = it, senderId= senderId, data = data, date = date)
+                            messageRemoteRepository.deleteMessage(message)
+                        }
+                        Result.success()
                     }
-                    Result.success()
-                }
-                ACTION_FETCH -> {
-                    val channelId = inputData.getString(KEY_CHANNELID)
-                    channelId?.let {
+                    ACTION_FETCH -> {
                         messageRemoteRepository.getMessages(it).collect{ list ->
                             list.forEach{ msg ->
                                 Log.d(TAG, "doWork: fetching -> ${msg.data}")
                                 messageRepository.sendMessage(msg)
                             }
                         }
+                        Result.success()
                     }
-                    Result.success()
-                }
-                else -> {
-                    Result.failure()
+                    else -> {
+                        Result.failure()
+                    }
                 }
             }
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure()
         }
-
         return Result.failure()
     }
 }

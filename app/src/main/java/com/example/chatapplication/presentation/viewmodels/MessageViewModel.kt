@@ -1,23 +1,20 @@
 package com.example.chatapplication.presentation.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.model.Message
-import com.example.chatapplication.domain.use_cases.UseCases
+import com.example.chatapplication.domain.use_cases.chat_use_cases.ChatUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class MessageViewModel @Inject constructor(private val useCases: UseCases): ViewModel() {
+class MessageViewModel @Inject constructor(private val chatUseCases: ChatUseCases): ViewModel() {
 
     private val _state = MutableStateFlow(ChannelState())
     val state : StateFlow<ChannelState> = _state
@@ -32,7 +29,7 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
     fun sendMessage(text: String){
         Log.d(TAG, "sendMessage: sending")
         viewModelScope.launch {
-            useCases.sendMessage(
+            chatUseCases.sendMessage(
                 message =  Message(
                     senderId = state.value.userId,
                     channelId = state.value.channelId,
@@ -48,15 +45,15 @@ class MessageViewModel @Inject constructor(private val useCases: UseCases): View
 
     fun deleteMessage(message: Message){
         viewModelScope.launch {
-            useCases.deleteMessage(message)
+            chatUseCases.deleteMessage(message)
         }
     }
 
     private fun getMessages(){
         viewModelScope.launch{
-            useCases.fetchMessages(state.value.channelId)
+            chatUseCases.fetchMessages(state.value.channelId)
         }
-        useCases.getMessages(state.value.channelId).onEach { result ->
+        chatUseCases.getMessages(state.value.channelId).onEach { result ->
             when(result){
                 is Resource.Success -> {
                     Log.d(TAG, "getMessages: Success")

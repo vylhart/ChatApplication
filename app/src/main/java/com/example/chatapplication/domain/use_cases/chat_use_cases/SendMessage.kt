@@ -1,4 +1,4 @@
-package com.example.chatapplication.domain.use_cases
+package com.example.chatapplication.domain.use_cases.chat_use_cases
 
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.data.worker.WorkerUtils
@@ -8,14 +8,12 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class GetMessages @Inject constructor(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
-    operator fun invoke(channel: String):Flow<Resource<List<Message>>> = flow {
-        try{
-            emit(Resource.Loading)
-            workerUtils.getMessages(channel)
-            repository.getMessages(channel).collect{ list->
-                emit(Resource.Success(data = list))
-            }
+class SendMessage @Inject constructor(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
+    operator fun invoke(message: Message): Flow<Resource<Boolean>> = flow {
+        try {
+            repository.sendMessage(message)
+            workerUtils.sendMessage(message)
+            emit(Resource.Success(true))
         }
         catch (e: Exception){
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error"))

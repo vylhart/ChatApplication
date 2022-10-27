@@ -1,6 +1,5 @@
 package com.example.chatapplication.presentation.screens
 
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -12,37 +11,20 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.chatapplication.R
 import com.example.chatapplication.domain.model.Message
+import com.example.chatapplication.presentation.composables.BackGroundCompose
 import com.example.chatapplication.presentation.composables.FeatureColor
-import com.example.chatapplication.presentation.composables.getFeatureColor
-import com.example.chatapplication.presentation.composables.getFeaturePath
 import com.example.chatapplication.presentation.viewmodels.MessageViewModel
 
 
 @Composable
 fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel){
     val state by viewModel.state.collectAsState()
-    val featureColor = getFeatureColor()
     var messageText by remember { mutableStateOf("") }
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = featureColor.darkColor),
-    ){
-        val feature = getFeaturePath(constraints)
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ){
-            drawPath(path = feature.mediumPath, color = featureColor.mediumColor)
-            drawPath(path = feature.lightPath, color = featureColor.lightColor)
-        }
-
+    BackGroundCompose {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,7 +35,7 @@ fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel)
                 .fillMaxWidth()
                 .weight(13f)){
                 items(state.messages){ msg ->
-                    ListItem(msg, featureColor, msg.senderId==state.userId)
+                    ListItem(msg, it, msg.senderId==state.userId)
                 }
             }
             if(state.error.isNotBlank()) {
@@ -88,7 +70,6 @@ fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel)
             }
 
         }
-
     }
 }
 
@@ -112,22 +93,5 @@ fun ListItem(message: Message, featureColor: FeatureColor, alignRight: Boolean){
         )
     }
     Spacer(modifier = Modifier.padding(5.dp))
-}
-
-@Composable
-@Preview(showBackground = true)
-fun PreviewScreen(){
-    var messageText by remember { mutableStateOf("") }
-
-    OutlinedTextField(
-        value = messageText,
-        onValueChange = {messageText=it},
-        trailingIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.Send, contentDescription = "send button")
-            }
-        }
-    )
-
 }
 

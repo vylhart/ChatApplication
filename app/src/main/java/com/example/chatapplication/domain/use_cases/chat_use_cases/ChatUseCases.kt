@@ -1,6 +1,6 @@
-package com.example.chatapplication.domain.use_cases
+package com.example.chatapplication.domain.use_cases.chat_use_cases
 
-data class UseCases(
+data class ChatUseCases(
     val deleteMessage: DeleteMessage,
     val sendMessage: SendMessage,
     val getMessages: GetMessages,
