@@ -22,17 +22,16 @@ class AuthViewModel @Inject constructor(
     val oneTapClient: SignInClient
 ): ViewModel()  {
 
-
     val isUserAuthenticated get() = authUseCases.isUserAuthenticated()
-    private val _state = MutableStateFlow(AuthState(isSignedIn = isUserAuthenticated))
-    val state : StateFlow<AuthState> = _state
+    var state = MutableStateFlow(AuthState(isSignedIn = isUserAuthenticated))
+        private set
 
     fun oneTapSignIn(callback: (BeginSignInResult) -> Unit){
         viewModelScope.launch {
             authUseCases.oneTapSignIn().collect{
                 when(it){
                     is Resource.Loading -> {
-                        _state.value = AuthState(isLoading = true)
+                        state.value = AuthState(isLoading = true)
                         Log.d(TAG, "oneTapSignIn: loading")
                     }
                     is Resource.Success -> {
@@ -40,7 +39,7 @@ class AuthViewModel @Inject constructor(
                         Log.d(TAG, "oneTapSignIn: success")
                     }
                     is Resource.Error -> {
-                        _state.value = AuthState(error = it.message)
+                        state.value = AuthState(error = it.message)
                         Log.d(TAG, "oneTapSignIn: ${it.message}")
                     }
                 }
@@ -48,20 +47,23 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun firebaseSignIn(googleCredential: AuthCredential){
+    fun firebaseSignIn(googleCredential: AuthCredential, navigateToChannelScreen: () -> Unit){
         viewModelScope.launch{
             authUseCases.firebaseSignIn(googleCredential).collect{
                 when(it){
                     is Resource.Loading -> {
-                        _state.value = AuthState(isLoading = true)
+                        state.value = AuthState(isLoading = true)
                         Log.d(TAG, "firebaseSignIn: loading")
                     }
                     is Resource.Success -> {
-                        _state.value = AuthState(isSignedIn = it.data)
-                        Log.d(TAG, "firebaseSignIn: success")
+                        state.value = AuthState(isSignedIn = it.data)
+                        Log.d(TAG, "firebaseSignIn: is success: ${it.data} ")
+                        if(it.data){
+                            navigateToChannelScreen()
+                        }
                     }
                     is Resource.Error -> {
-                        _state.value = AuthState(error = it.message)
+                        state.value = AuthState(error = it.message)
                         Log.d(TAG, "firebaseSignIn: error")
                     }
                 }
@@ -69,11 +71,7 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-
     fun signOut(){
         authUseCases.signOut().launchIn(viewModelScope)
     }
-
-
-
 }

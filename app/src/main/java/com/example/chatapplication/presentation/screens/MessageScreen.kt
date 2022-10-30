@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.chatapplication.domain.model.Message
@@ -24,15 +25,26 @@ import com.example.chatapplication.presentation.viewmodels.MessageViewModel
 @Composable
 fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel){
     val state by viewModel.state.collectAsState()
+    val sendMessage = {msg:String ->  viewModel.sendMessage(msg)}
+    MessageScreenContent(state, sendMessage)
+}
+
+@Composable
+fun MessageScreenContent(state: ChannelState, sendMessage: (String) -> Unit) {
     var messageText by remember { mutableStateOf("") }
+
 
     BackGroundCompose {
         Column(
-            modifier = Modifier.fillMaxSize().padding(5.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(5.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
 
-            LazyColumn(modifier = Modifier.fillMaxWidth().weight(13f)){
+            LazyColumn(modifier = Modifier
+                .fillMaxWidth()
+                .weight(13f)){
                 items(state.messages){ msg ->
                     ListItem(msg, it, msg.senderId==state.userId)
                 }
@@ -47,7 +59,7 @@ fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel)
                     modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
                         IconButton(onClick = {
-                            viewModel.sendMessage(messageText)
+                            sendMessage(messageText)
                             messageText = ""
                         }) {
                             Icon(imageVector = Icons.Default.Send, contentDescription = "send button")
@@ -90,4 +102,11 @@ fun HandleMessageState(state: ChannelState) {
     if(state.isLoading) {
         CircularProgressIndicator()
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewScreen(){
+    MessageScreenContent(state = ChannelState(messages = listOf(Message(data = "hello"))), sendMessage = {} )
 }

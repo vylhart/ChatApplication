@@ -16,9 +16,11 @@ import com.example.chatapplication.presentation.viewmodels.MessageViewModel
 fun ChatNavigation(navController: NavHostController) {
     val messageViewModel: MessageViewModel  = hiltViewModel()
     val authViewModel: AuthViewModel = hiltViewModel()
+    val startDestination =  if(authViewModel.isUserAuthenticated) Screen.ChannelScreen.route else Screen.SignInScreen.route
+
     NavHost(
         navController = navController,
-        startDestination = Screen.SignInScreen.route
+        startDestination = startDestination
     ){
         composable(route = Screen.ChannelScreen.route){
             ChannelScreen(navController, messageViewModel)

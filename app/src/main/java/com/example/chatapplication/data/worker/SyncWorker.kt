@@ -6,7 +6,6 @@ import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.chatapplication.common.Constants.TAG
-import com.example.chatapplication.data.remote.repository.MessageRemoteRepositoryImpl
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_DELETE
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_FETCH
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_SEND
@@ -20,13 +19,14 @@ import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import javax.inject.Named
 
 @HiltWorker
 class SyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
-    private val messageRemoteRepository: MessageRemoteRepositoryImpl,
-    private val messageRepository: MessageRepository
+    @Named("Remote") private val remoteRepository: MessageRepository,
+    @Named("Local")  private val localRepository:  MessageRepository
     ): CoroutineWorker(context, params) {
 
 
@@ -45,22 +45,22 @@ class SyncWorker @AssistedInject constructor(
                     ACTION_SEND -> {
                         if (messageId != null && senderId != null && data != null) {
                             val message = Message(messageId = messageId, channelId = it, senderId= senderId, data = data, date = date)
-                            messageRemoteRepository.sendMessage(message)
+                            remoteRepository.sendMessage(message)
                         }
                         Result.success()
                     }
                     ACTION_DELETE -> {
                         if (messageId != null && senderId != null && data != null) {
                             val message = Message(messageId = messageId, channelId = it, senderId= senderId, data = data, date = date)
-                            messageRemoteRepository.deleteMessage(message)
+                            remoteRepository.deleteMessage(message)
                         }
                         Result.success()
                     }
                     ACTION_FETCH -> {
-                        messageRemoteRepository.getMessages(it).collect{ list ->
+                        remoteRepository.getMessages(it).collect{ list ->
                             list.forEach{ msg ->
                                 Log.d(TAG, "doWork: fetching -> ${msg.data}")
-                                messageRepository.sendMessage(msg)
+                                localRepository.sendMessage(msg)
                             }
                         }
                         Result.success()

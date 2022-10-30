@@ -46,12 +46,12 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun providesUseCases(repository: MessageRepository, remoteRepository: MessageRemoteRepositoryImpl, workerUtils: WorkerUtils): ChatUseCases {
+    fun providesUseCases(@Named("Local") repository: MessageRepository, @Named("Remote") remoteRepository: MessageRepository, workerUtils: WorkerUtils): ChatUseCases {
         return ChatUseCases(
             deleteMessage = DeleteMessage(repository, workerUtils),
             sendMessage = SendMessage(repository, workerUtils),
-            getMessages = GetMessages(repository, workerUtils),
-            fetchMessages = FetchMessages(repository, remoteRepository)
+            getMessagesFromLocalDB = GetMessagesFromLocalDB(repository),
+            getMessagesFromNetwork = GetMessagesFromNetwork(repository, remoteRepository)
         )
     }
 
@@ -63,13 +63,15 @@ object AppModule {
 
     @Singleton
     @Provides
+    @Named("Local")
     fun provideLocalMessageRepository(db: MessageDatabase): MessageRepository {
         return MessageLocalRepositoryImpl(db.messageDao)
     }
 
     @Singleton
     @Provides
-    fun provideRemoteMessageRepository(collection: CollectionReference): MessageRemoteRepositoryImpl {
+    @Named("Remote")
+    fun provideRemoteMessageRepository(collection: CollectionReference): MessageRepository {
         return MessageRemoteRepositoryImpl(collection)
     }
 
@@ -84,7 +86,6 @@ object AppModule {
     fun provideFirebaseAuth(): FirebaseAuth {
         return FirebaseAuth.getInstance()
     }
-
 
     @Singleton
     @Provides

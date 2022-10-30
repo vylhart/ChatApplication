@@ -19,9 +19,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ChatApplicationTheme {
+                val navController = rememberNavController()
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background) {
-                        val navController = rememberNavController()
                         ChatNavigation(navController = navController)
                 }
             }

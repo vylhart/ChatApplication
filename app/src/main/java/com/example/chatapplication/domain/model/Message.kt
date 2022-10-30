@@ -10,5 +10,8 @@ data class Message(
     val channelId: String = "",
     val senderId: String = "",
     val data: String = "",
-    val date:Long = 0
+    val date:Long = 0,
+    val isSent: Boolean = false,
+    val isDelivered: Boolean = false,
+    val isSeen: Boolean = false
 )
