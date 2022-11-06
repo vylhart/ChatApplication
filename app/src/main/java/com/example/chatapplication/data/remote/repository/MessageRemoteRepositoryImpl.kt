@@ -15,7 +15,7 @@ class MessageRemoteRepositoryImpl (private val collection: CollectionReference):
     override suspend fun getMessages(channel: String): Flow<List<Message>> = callbackFlow {
         collection
             .document(channel)
-            .collection(Constants.COLLECTION_CHANNEL)
+            .collection(Constants.COLLECTION_MESSAGE)
             .orderBy("date")
             .addSnapshotListener{ snapshot, _ ->
                 snapshot?.let {
@@ -35,7 +35,7 @@ class MessageRemoteRepositoryImpl (private val collection: CollectionReference):
     override suspend fun deleteMessage(message: Message){
         collection
             .document(message.channelId)
-            .collection(Constants.COLLECTION_CHANNEL)
+            .collection(Constants.COLLECTION_MESSAGE)
             .document(message.messageId)
             .delete()
     }
@@ -43,7 +43,7 @@ class MessageRemoteRepositoryImpl (private val collection: CollectionReference):
     override suspend fun sendMessage(message: Message){
         collection
             .document(message.channelId)
-            .collection(Constants.COLLECTION_CHANNEL)
+            .collection(Constants.COLLECTION_MESSAGE)
             .document(message.messageId)
             .set(message)
             .addOnFailureListener {

@@ -1,10 +1,10 @@
 package com.example.chatapplication.di
 
 import android.content.Context
-import android.util.Log
 import androidx.startup.Initializer
 import androidx.work.Configuration
 import androidx.work.WorkManager
+import com.example.chatapplication.data.worker.WorkerUtils
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,5 +26,11 @@ object WorkManagerInitializer : Initializer<WorkManager> {
 
     override fun dependencies(): List<Class<out Initializer<*>>> {
         return emptyList()
+    }
+
+    @Singleton
+    @Provides
+    fun provideWorkerRepo(@ApplicationContext context: Context): WorkerUtils {
+        return WorkerUtils(context)
     }
 }

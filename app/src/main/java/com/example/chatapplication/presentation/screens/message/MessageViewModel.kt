@@ -1,6 +1,7 @@
-package com.example.chatapplication.presentation.viewmodels
+package com.example.chatapplication.presentation.screens.message
 
 import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapplication.common.Constants.TAG
@@ -17,20 +18,24 @@ import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
-class MessageViewModel @Inject constructor(private val chatUseCases: ChatUseCases, private val auth: FirebaseAuth): ViewModel() {
+class MessageViewModel @Inject constructor(
+    private val chatUseCases: ChatUseCases,
+    auth: FirebaseAuth,
+    savedStateHandle: SavedStateHandle
+    ): ViewModel() {
 
-    var state = MutableStateFlow(ChannelState())
+    lateinit var state:MutableStateFlow<MessageState>
         private set
 
-    fun enterChannel(channel: String){
-        val userId  = auth.currentUser.toString()
+    init{
+        val channel = savedStateHandle.get<String>("channelID") ?: "random_channel"
+        val userId  = auth.currentUser?.uid ?: "random"
         Log.d(TAG, "enterChannel: $channel")
-        Log.d(TAG, "user: $userId")
-        state.value = ChannelState(channelId = channel, userId = userId)
+        state.value = MessageState(channelId = channel, userId = userId)
         getMessages()
     }
 
-    fun sendMessage(text: String){
+    fun sendMessage(text:   String){
         Log.d(TAG, "sendMessage: sending")
         viewModelScope.launch {
             chatUseCases.run {
@@ -61,15 +66,15 @@ class MessageViewModel @Inject constructor(private val chatUseCases: ChatUseCase
             when(result){
                 is Resource.Success -> {
                     Log.d(TAG, "getMessages: Success")
-                    state.value = ChannelState(messages = result.data, channelId = state.value.channelId, userId = state.value.userId)
+                    state.value = MessageState(messages = result.data, channelId = state.value.channelId, userId = state.value.userId)
                 }
                 is Resource.Loading -> {
                     Log.d(TAG, "getMessages: Loading")
-                    state.value = ChannelState(isLoading = true, channelId = state.value.channelId, userId = state.value.userId)
+                    state.value = MessageState(isLoading = true, channelId = state.value.channelId, userId = state.value.userId)
                 }
                 is Resource.Error -> {
                     Log.d(TAG, "getMessages: Error")
-                    state.value = ChannelState(error = result.message, channelId = state.value.channelId, userId = state.value.userId)
+                    state.value = MessageState(error = result.message, channelId = state.value.channelId, userId = state.value.userId)
                 }
             }
         }.launchIn(viewModelScope)

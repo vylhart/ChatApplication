@@ -1,4 +1,4 @@
-package com.example.chatapplication.presentation.screens
+package com.example.chatapplication.presentation.screens.auth
 
 import android.app.Activity.RESULT_OK
 import android.util.Log
@@ -18,7 +18,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -27,8 +26,6 @@ import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.common.Screen
 import com.example.chatapplication.presentation.composables.BackGroundCompose
 import com.example.chatapplication.presentation.composables.ErrorText
-import com.example.chatapplication.presentation.viewmodels.AuthState
-import com.example.chatapplication.presentation.viewmodels.AuthViewModel
 import com.google.android.gms.auth.api.identity.BeginSignInResult
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.GoogleAuthProvider.getCredential

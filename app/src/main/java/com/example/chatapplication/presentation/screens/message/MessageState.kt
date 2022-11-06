@@ -1,11 +1,11 @@
-package com.example.chatapplication.presentation.viewmodels
+package com.example.chatapplication.presentation.screens.message
 
 import com.example.chatapplication.domain.model.Message
 
-data class ChannelState(
+data class MessageState(
     val isLoading: Boolean = false,
     val messages: List<Message> = emptyList(),
     val error: String = "",
-    var userId: String = "random",
-    val channelId: String = "random"
+    val userId: String,
+    val channelId: String
 )

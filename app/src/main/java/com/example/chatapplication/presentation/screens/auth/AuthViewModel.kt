@@ -1,4 +1,4 @@
-package com.example.chatapplication.presentation.viewmodels
+package com.example.chatapplication.presentation.screens.auth
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -11,7 +11,6 @@ import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.auth.AuthCredential
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
