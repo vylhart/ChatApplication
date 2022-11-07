@@ -1,5 +1,6 @@
 package com.example.chatapplication.domain.use_cases.chat_use_cases
 
+import com.example.chatapplication.common.Constants.UNKNOWN_ERROR
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
@@ -17,7 +18,7 @@ class GetMessagesFromLocalDB @Inject constructor(@Named("Local") private val rep
             }
         }
         catch (e: Exception){
-            emit(Resource.Error(e.localizedMessage ?: "An unexpected error"))
+            emit(Resource.Error(e.localizedMessage ?: UNKNOWN_ERROR))
         }
     }
 }

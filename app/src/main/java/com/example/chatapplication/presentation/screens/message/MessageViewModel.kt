@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatapplication.common.Constants.CHANNEL_ID
 import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.model.Message
@@ -24,13 +25,13 @@ class MessageViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
     ): ViewModel() {
 
-    lateinit var state:MutableStateFlow<MessageState>
+    var state = MutableStateFlow(MessageState())
         private set
 
     init{
-        val channel = savedStateHandle.get<String>("channelID") ?: "random_channel"
-        val userId  = auth.currentUser?.uid ?: "random"
+        val channel = savedStateHandle.get<String>(CHANNEL_ID) ?: "random_channel"
         Log.d(TAG, "enterChannel: $channel")
+        val userId  = auth.currentUser?.uid ?: "random"
         state.value = MessageState(channelId = channel, userId = userId)
         getMessages()
     }

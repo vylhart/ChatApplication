@@ -6,6 +6,6 @@ data class MessageState(
     val isLoading: Boolean = false,
     val messages: List<Message> = emptyList(),
     val error: String = "",
-    val userId: String,
-    val channelId: String
+    val userId: String = "random",
+    val channelId: String = "random"
 )

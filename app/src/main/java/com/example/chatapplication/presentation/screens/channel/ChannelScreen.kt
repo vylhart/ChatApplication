@@ -29,7 +29,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.chatapplication.R
 import com.example.chatapplication.common.Constants.TAG
-import com.example.chatapplication.common.Constants.link
 import com.example.chatapplication.common.Screen
 import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.domain.model.User
@@ -38,45 +37,38 @@ import com.example.chatapplication.presentation.composables.BackGroundCompose
 @Composable
 fun ChannelScreen(navController: NavHostController, viewModel: ChannelViewModel = hiltViewModel()){
     Log.d(TAG, "ChannelScreen: ")
-    val state = viewModel.state.collectAsState()
+    val state by viewModel.state.collectAsState()
     ChannelScreenContent(state){ channelID: String ->
-        navController.navigate(Screen.MessageScreen.route)
-        viewModel.onClick(channelID)
+        viewModel.joinChannel(channelID) {
+            navController.navigate(Screen.MessageScreen.route + "/$channelID")
+        }
     }
 }
 
 @Composable
-fun ChannelScreenContent(state: State<ChannelState>, onClick: (String) -> Unit){
+fun ChannelScreenContent(state: ChannelState, onClick: (String) -> Unit){
     val channelName = remember{ mutableStateOf("")}
 
     BackGroundCompose {
-        Box(
-            modifier = Modifier
-                .fillMaxSize(),
-                //.verticalScroll(rememberScrollState()),
-            contentAlignment = Alignment.Center
+        Column(
+            modifier = Modifier.fillMaxSize(),
         ) {
 
             OutlinedTextField(
                 value = channelName.value,
                 onValueChange = { channelName.value = it },
-                label = {
-                    Text(text = "Join Channel")
-                },
+                label = { Text(text = "Join Channel") },
                 trailingIcon = {
-                    IconButton(onClick = {
-                        onClick(channelName.value)
-                    }) {
+                    IconButton(onClick = { onClick(channelName.value) }) {
                         Icon(imageVector = Icons.Default.Send, contentDescription = "send button")
                     }
-                }
+                },
+                modifier = Modifier.fillMaxWidth().padding(4.dp)
             )
-            LazyColumn(
-                modifier = Modifier.fillMaxWidth()
-            ){
-                items(state.value.channels){ channel ->
-                    ChannelItem(channel = channel, state.value.userID, onClick)
 
+            LazyColumn(modifier = Modifier.fillMaxWidth()){
+                items(state.channels){ channel ->
+                    ChannelItem(channel = channel, state.userID, onClick)
                 }
             }
         }
@@ -87,32 +79,23 @@ fun ChannelScreenContent(state: State<ChannelState>, onClick: (String) -> Unit){
 fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Unit){
     var otheruser: User? = null
     for (user in channel.users){
+        otheruser = user
         if(user.uid != currentUserID){
-            otheruser = user
             break
         }
     }
     otheruser?.let {
+        Log.d(TAG, "ChannelItem: ${channel.channelID}")
+        Spacer(modifier = Modifier.padding(6.dp))
         Row(
-            modifier = Modifier.fillMaxWidth()
-                                .height(45.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(45.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            //AsyncImage(model = link  , contentDescription = null)
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(link)
-                    .crossfade(true)
-                    .build(),
-                placeholder = painterResource(R.drawable.ic_user),
-                contentDescription = stringResource(R.string.project_id),
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .clip(CircleShape)
-                    .weight(1f)
-                    .fillMaxHeight()
-            )
+            Spacer(modifier = Modifier.padding(all = 3.dp))
+            CoilImage(it.photoURL)
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .padding(start = 10.dp)
@@ -120,14 +103,16 @@ fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Un
                 .clickable { onClick(channel.channelID) }
             ) {
                 Text(
-                    text = "Shashank",
+                    text = it.name ?: "no name",
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = "Hello World")
+                Text(text = channel.channelID)
             }
             Text(
-                modifier = Modifier.wrapContentHeight().weight(1f),
-                text = "10:55",
+                modifier = Modifier
+                    .wrapContentHeight()
+                    .weight(1f),
+                text = "10:55 ",
             )
         }
     }
@@ -136,6 +121,37 @@ fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Un
 @Preview(showBackground = true)
 @Composable
 fun PreviewScreen(){
-    //ChannelItem(channel = Channel(users = listOf(User(uid = "sdfsd"))), "fdsdf", {})
+    ChannelScreenContent(
+        state = ChannelState(
+            userID = "dfd",
+            channels = listOf(
+                Channel(
+                    channelID = "sdfsd",
+                    users = mutableListOf(
+                        User(
+                            uid = "dfsdf",
+                            name = "Shashank",
+                            photoURL = "https://lh3.googleusercontent.com/a/ALm5wu0FQJZiuGL765qnn_bE5F5cREFB8Q4omSbL3a2qcA=s96-c"
+                        )
+                    )
+                )
+            )
+        ),
+        onClick = {})
 }
 
+@Composable
+fun CoilImage(photoURL: String?) {
+    AsyncImage(
+        model = ImageRequest.Builder(LocalContext.current)
+            .data(photoURL)
+            .crossfade(true)
+            .build(),
+        placeholder = painterResource(R.drawable.ic_user),
+        contentDescription = stringResource(R.string.project_id),
+        contentScale = ContentScale.Fit,
+        modifier = Modifier
+            .clip(CircleShape)
+            .fillMaxHeight()
+    )
+}

@@ -5,6 +5,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.chatapplication.common.Constants.CHANNEL_ID
 import com.example.chatapplication.common.Screen
 import com.example.chatapplication.presentation.screens.channel.ChannelScreen
 import com.example.chatapplication.presentation.screens.message.MessageScreen
@@ -23,7 +24,7 @@ fun ChatNavigation(navController: NavHostController) {
         composable(route = Screen.ChannelScreen.route){
             ChannelScreen(navController)
         }
-        composable(route = Screen.MessageScreen.route){
+        composable(route = Screen.MessageScreen.route+"/{$CHANNEL_ID}"){
             MessageScreen(navController)
         }
         composable(route = Screen.SignInScreen.route){

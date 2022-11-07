@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
 fun BackGroundCompose(content: @Composable (FeatureColor)-> Unit){
@@ -14,8 +15,8 @@ fun BackGroundCompose(content: @Composable (FeatureColor)-> Unit){
     /*val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(
         color = featureColor.extraDarkColor
-    )*/
-
+    )
+*/
     BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()

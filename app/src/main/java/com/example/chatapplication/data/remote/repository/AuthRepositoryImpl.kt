@@ -67,7 +67,7 @@ class AuthRepositoryImpl @Inject constructor(
                 createdAt = System.currentTimeMillis(),
                 name = displayName ?: "user",
                 email = email,
-                photoURL = photoUrl
+                photoURL = photoUrl.toString()
             )
             firestore.collection(COLLECTION_USER).document(user.uid).set(user).await()
         }
