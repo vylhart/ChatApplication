@@ -15,7 +15,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "841323786495-b145tj19qi7fmei09hmgsgt0379dogpe.apps.googleusercontent.com",
+          "client_id": "841323786495-ebjv19cppbhs0afcljlif4aleephqqso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.chatapplication",
+            "certificate_hash": "41c695809d400edb7ec5e293733241773688efa9"
+          }
+        },
+        {
+          "client_id": "841323786495-ndqhgpqiopmnm5opn2qulu3fvkk43pit.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.chatapplication",

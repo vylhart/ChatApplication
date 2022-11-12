@@ -9,7 +9,7 @@ import com.example.chatapplication.data.remote.repository.MessageRemoteRepositor
 import com.example.chatapplication.data.worker.WorkerUtils
 import com.example.chatapplication.domain.repository.MessageRepository
 import com.example.chatapplication.domain.use_cases.chat_use_cases.*
-import com.google.firebase.firestore.CollectionReference
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,7 +23,7 @@ object MessageModule {
 
     @Singleton
     @Provides
-    fun provideUseCases(@Named("Local") repository: MessageRepository, @Named("Remote") remoteRepository: MessageRepository, workerUtils: WorkerUtils): ChatUseCases {
+    fun provideMessageUseCases(@Named("Local") repository: MessageRepository, @Named("Remote") remoteRepository: MessageRepository, workerUtils: WorkerUtils): ChatUseCases {
         return ChatUseCases(
             deleteMessage = DeleteMessage(repository, workerUtils),
             sendMessage = SendMessage(repository, workerUtils),
@@ -48,8 +48,8 @@ object MessageModule {
     @Singleton
     @Provides
     @Named("Remote")
-    fun provideRemoteMessageRepository(collection: CollectionReference): MessageRepository {
-        return MessageRemoteRepositoryImpl(collection)
+    fun provideRemoteMessageRepository(firestore: FirebaseFirestore): MessageRepository {
+        return MessageRemoteRepositoryImpl(firestore)
     }
 
 

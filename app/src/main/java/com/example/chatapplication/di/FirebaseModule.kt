@@ -2,7 +2,6 @@ package com.example.chatapplication.di
 
 import android.app.Application
 import android.content.Context
-import com.example.chatapplication.common.Constants
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -24,10 +23,6 @@ object FirebaseModule {
     @Singleton
     @Provides
     fun provideFirestoreInstance() = FirebaseFirestore.getInstance()
-
-    @Singleton
-    @Provides
-    fun provideChannelCollection() = FirebaseFirestore.getInstance().collection(Constants.COLLECTION_CHANNEL)
 
 
     @Singleton

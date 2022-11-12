@@ -63,7 +63,9 @@ fun ChannelScreenContent(state: ChannelState, onClick: (String) -> Unit){
                         Icon(imageVector = Icons.Default.Send, contentDescription = "send button")
                     }
                 },
-                modifier = Modifier.fillMaxWidth().padding(4.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(4.dp)
             )
 
             LazyColumn(modifier = Modifier.fillMaxWidth()){
@@ -85,7 +87,6 @@ fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Un
         }
     }
     otheruser?.let {
-        Log.d(TAG, "ChannelItem: ${channel.channelID}")
         Spacer(modifier = Modifier.padding(6.dp))
         Row(
             modifier = Modifier

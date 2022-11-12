@@ -23,11 +23,10 @@ import javax.inject.Named
 class AuthRepositoryImpl @Inject constructor(
     private val auth: FirebaseAuth,
     private val oneTapClient: SignInClient,
-    @Named(SIGN_IN_REQUEST)
-    private val signInRequest: BeginSignInRequest,
-    @Named(SIGN_UP_REQUEST)
-    private val signUpRequest: BeginSignInRequest,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    @Named(SIGN_IN_REQUEST) private val signInRequest: BeginSignInRequest,
+    @Named(SIGN_UP_REQUEST) private val signUpRequest: BeginSignInRequest
+
 ): AuthRepository {
 
     override fun isUserAuthenticated(): Boolean = auth.currentUser != null

@@ -10,7 +10,7 @@ interface MessageDao{
     fun getMessages(id: String): Flow<List<Message>>
 
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertMessage(message: Message)
 
     @Delete

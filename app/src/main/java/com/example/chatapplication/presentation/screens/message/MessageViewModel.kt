@@ -36,7 +36,8 @@ class MessageViewModel @Inject constructor(
         getMessages()
     }
 
-    fun sendMessage(text:   String){
+    fun sendMessage(text: String){
+        if(text.isEmpty())  return
         Log.d(TAG, "sendMessage: sending")
         viewModelScope.launch {
             chatUseCases.run {

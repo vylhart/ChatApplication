@@ -7,10 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.chatapplication.common.Constants.CHANNEL_ID
 import com.example.chatapplication.common.Screen
+import com.example.chatapplication.presentation.screens.auth.AuthViewModel
+import com.example.chatapplication.presentation.screens.auth.SignInScreen
 import com.example.chatapplication.presentation.screens.channel.ChannelScreen
 import com.example.chatapplication.presentation.screens.message.MessageScreen
-import com.example.chatapplication.presentation.screens.auth.SignInScreen
-import com.example.chatapplication.presentation.screens.auth.AuthViewModel
 
 @Composable
 fun ChatNavigation(navController: NavHostController) {

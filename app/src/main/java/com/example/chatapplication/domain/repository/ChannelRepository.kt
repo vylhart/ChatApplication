@@ -5,5 +5,8 @@ import com.example.chatapplication.domain.model.Channel
 import kotlinx.coroutines.flow.Flow
 
 interface ChannelRepository {
-    suspend fun getChannels(userID: String): Flow<Resource<MutableList<Channel>>>
+    suspend fun getChannels(): Flow<List<Channel>>
+    suspend fun leaveChannel(channel: Channel)
+    suspend fun joinChannel(channel: Channel)
+    suspend fun getChannel(channelID: String): Channel
 }
