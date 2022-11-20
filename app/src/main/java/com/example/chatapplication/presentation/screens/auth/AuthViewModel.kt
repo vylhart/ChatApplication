@@ -6,9 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.use_cases.auth_use_cases.AuthUseCases
-import com.google.android.gms.auth.api.identity.BeginSignInResult
-import com.google.android.gms.auth.api.identity.SignInClient
-import com.google.firebase.auth.AuthCredential
+import com.example.chatapplication.domain.use_cases.user_use_cases.UserUseCases
+import com.example.chatapplication.presentation.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
@@ -17,54 +16,71 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val  authUseCases: AuthUseCases,
-    val oneTapClient: SignInClient
+    private val authUseCases: AuthUseCases,
+    private val userUseCases: UserUseCases
 ): ViewModel()  {
 
     val isUserAuthenticated get() = authUseCases.isUserAuthenticated()
     var state = MutableStateFlow(AuthState(isSignedIn = isUserAuthenticated))
         private set
 
-    fun oneTapSignIn(callback: (BeginSignInResult) -> Unit){
+    fun beginSignIn(number: String, activity: MainActivity){
+        Log.d(TAG, "beginSignIn: ")
         viewModelScope.launch {
-            authUseCases.oneTapSignIn().collect{
+            authUseCases.beginSignIn(number, activity).collect{
                 when(it){
-                    is Resource.Loading -> {
-                        state.value = AuthState(isLoading = true)
-                        Log.d(TAG, "oneTapSignIn: loading")
-                    }
+                    is Resource.Loading -> state.value = AuthState(isLoading = true)
+                    is Resource.Error ->   state.value = AuthState(error = it.message)
                     is Resource.Success -> {
-                        callback(it.data)
-                        Log.d(TAG, "oneTapSignIn: success")
-                    }
-                    is Resource.Error -> {
-                        state.value = AuthState(error = it.message)
-                        Log.d(TAG, "oneTapSignIn: ${it.message}")
+                        if(it.data){ checkNewUser() }
+                        state.value = AuthState(codeSent = true, isSignedIn = it.data)
                     }
                 }
             }
         }
     }
 
-    fun firebaseSignIn(googleCredential: AuthCredential, navigateToChannelScreen: () -> Unit){
+    fun firebaseSignIn(code: String){
+        Log.d(TAG, "firebaseSignIn: ")
         viewModelScope.launch{
-            authUseCases.firebaseSignIn(googleCredential).collect{
+            authUseCases.firebaseSignIn(code).collect{
                 when(it){
-                    is Resource.Loading -> {
-                        state.value = AuthState(isLoading = true)
-                        Log.d(TAG, "firebaseSignIn: loading")
-                    }
+                    is Resource.Loading -> state.value = AuthState(isLoading = true)
+                    is Resource.Error ->   state.value = AuthState(error = it.message)
                     is Resource.Success -> {
                         state.value = AuthState(isSignedIn = it.data)
-                        Log.d(TAG, "firebaseSignIn: is success: ${it.data} ")
-                        if(it.data){
-                            navigateToChannelScreen()
-                        }
+                        checkNewUser()
                     }
-                    is Resource.Error -> {
-                        state.value = AuthState(error = it.message)
-                        Log.d(TAG, "firebaseSignIn: error")
+                }
+            }
+        }
+    }
+
+    private fun checkNewUser(){
+        Log.d(TAG, "checkNewUser: ")
+        viewModelScope.launch {
+            userUseCases.getCurrentUser().collect{
+                when(it){
+                    is Resource.Loading -> state.value = AuthState(isLoading = true)
+                    is Resource.Error   -> state.value = AuthState(error = it.message)
+                    is Resource.Success -> {
+                        Log.d(TAG, "checkNewUser: success ${it.data==null}")
+                        state.value = AuthState(isNewUser = it.data==null, isSignedIn = state.value.isSignedIn)
                     }
+                        
+                }
+            }
+        }
+    }
+
+    fun addNewUser(name: String, navigateToChannelScreen: () -> Unit){
+        Log.d(TAG, "addNewUser: ")
+        viewModelScope.launch {
+            userUseCases.addNewUser(name).collect{
+                when(it){
+                    is Resource.Loading -> state.value = AuthState(isLoading = true)
+                    is Resource.Error   -> state.value = AuthState(error = it.message)
+                    is Resource.Success -> navigateToChannelScreen()
                 }
             }
         }

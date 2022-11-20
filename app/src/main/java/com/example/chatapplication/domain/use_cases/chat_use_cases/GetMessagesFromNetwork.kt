@@ -6,9 +6,9 @@ import com.example.chatapplication.domain.repository.MessageRepository
 import javax.inject.Inject
 import javax.inject.Named
 
-class GetMessagesFromNetwork @Inject constructor(
-    @Named("Local") private val localRepository: MessageRepository,
-    @Named("Remote") private val remoteRepository: MessageRepository) {
+class GetMessagesFromNetwork(
+    private val localRepository: MessageRepository,
+    private val remoteRepository: MessageRepository) {
     suspend operator fun invoke(channel: String) {
         Log.d(TAG, "invoke: fetch")
         try{

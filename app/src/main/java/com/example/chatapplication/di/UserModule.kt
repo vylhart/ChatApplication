@@ -1,9 +1,8 @@
 package com.example.chatapplication.di
 
-import com.example.chatapplication.data.remote.repository.UserRepositoryImpl
+import com.example.chatapplication.data.repository.remote.repository.UserRepositoryImpl
 import com.example.chatapplication.domain.repository.UserRepository
-import com.example.chatapplication.domain.use_cases.channel_use_cases.GetChannelsFromNetwork
-import com.example.chatapplication.domain.use_cases.channel_use_cases.JoinChannel
+import com.example.chatapplication.domain.use_cases.user_use_cases.AddNewUser
 import com.example.chatapplication.domain.use_cases.user_use_cases.GetCurrentUser
 import com.example.chatapplication.domain.use_cases.user_use_cases.UserUseCases
 import com.google.firebase.auth.FirebaseAuth
@@ -28,7 +27,8 @@ object UserModule {
     @Provides
     fun provideUserUseCases(repository: UserRepository): UserUseCases {
         return UserUseCases(
-            getCurrentUsers = GetCurrentUser(repository = repository)
+            getCurrentUser = GetCurrentUser(repository = repository),
+            addNewUser = AddNewUser(repository = repository)
         )
     }
 }

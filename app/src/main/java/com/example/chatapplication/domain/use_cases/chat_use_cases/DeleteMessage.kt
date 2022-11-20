@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class DeleteMessage @Inject constructor(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
+class DeleteMessage(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
     operator fun invoke(message: Message): Flow<Resource<Boolean>> = flow {
         try{
             emit(Resource.Loading)

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
 
     <application
         android:usesCleartextTraffic="true"
@@ -26,7 +27,7 @@
 
 
         <service
-            android:name=".data.remote.FCMService"
+            android:name=".data.repository.remote.FCMService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

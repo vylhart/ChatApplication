@@ -3,9 +3,9 @@ package com.example.chatapplication.di
 import android.app.Application
 import androidx.room.Room
 import com.example.chatapplication.common.Constants
-import com.example.chatapplication.data.local.MessageDatabase
-import com.example.chatapplication.data.local.repository.MessageLocalRepositoryImpl
-import com.example.chatapplication.data.remote.repository.MessageRemoteRepositoryImpl
+import com.example.chatapplication.data.repository.local.MessageDatabase
+import com.example.chatapplication.data.repository.local.repository.MessageLocalRepositoryImpl
+import com.example.chatapplication.data.repository.remote.repository.MessageRemoteRepositoryImpl
 import com.example.chatapplication.data.worker.WorkerUtils
 import com.example.chatapplication.domain.repository.MessageRepository
 import com.example.chatapplication.domain.use_cases.chat_use_cases.*
@@ -34,7 +34,7 @@ object MessageModule {
 
     @Singleton
     @Provides
-    fun provideMessageDatabase(app: Application): MessageDatabase{
+    fun provideMessageDatabase(app: Application): MessageDatabase {
         return Room.databaseBuilder(app, MessageDatabase::class.java, Constants.DATABASE_NAME).build()
     }
 

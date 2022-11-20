@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background) {
-                        ChatNavigation(navController = navController)
+                        ChatNavigation(navController = navController, activity = this)
                 }
             }
         }

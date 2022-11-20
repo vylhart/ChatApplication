@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Named
 
-class GetMessagesFromLocalDB @Inject constructor(@Named("Local") private val repository: MessageRepository) {
+class GetMessagesFromLocalDB(private val repository: MessageRepository) {
     operator fun invoke(channel: String):Flow<Resource<List<Message>>> = flow {
         try{
             emit(Resource.Loading)

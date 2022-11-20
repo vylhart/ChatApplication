@@ -11,6 +11,7 @@ class WorkerUtils @Inject constructor(context: Context){
         const val ACTION_SEND = "send"
         const val ACTION_FETCH = "fetch"
         const val ACTION_DELETE = "delete"
+        const val ACTION_UPDATE = "update"
         const val KEY_ACTION = "action"
         const val KEY_CHANNELID = "channelId"
         const val KEY_SENDERID = "senderId"

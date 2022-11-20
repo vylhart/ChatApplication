@@ -4,5 +4,5 @@ data class AuthUseCases(
     val isUserAuthenticated: IsUserAuthenticated,
     val firebaseSignIn: FirebaseSignIn,
     val signOut: SignOut,
-    val oneTapSignIn: OneTapSignIn
+    val beginSignIn: BeginSignIn
 )

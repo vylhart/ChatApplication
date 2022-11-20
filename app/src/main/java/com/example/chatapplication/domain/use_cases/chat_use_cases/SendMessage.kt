@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class SendMessage @Inject constructor(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
+class SendMessage(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
     operator fun invoke(message: Message): Flow<Resource<Boolean>> = flow {
         try {
             repository.sendMessage(message)

@@ -1,15 +1,13 @@
 package com.example.chatapplication.presentation.screens.channel
 
+import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.runtime.*
@@ -29,17 +27,20 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.chatapplication.R
 import com.example.chatapplication.common.Constants.TAG
-import com.example.chatapplication.common.Screen
 import com.example.chatapplication.domain.model.Channel
-import com.example.chatapplication.domain.model.User
+import com.example.chatapplication.data.model.User
+import com.example.chatapplication.presentation.Screen
 import com.example.chatapplication.presentation.composables.BackGroundCompose
+import com.example.chatapplication.presentation.composables.getFeatureColor
+import com.example.chatapplication.presentation.screens.main.BottomBar
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ChannelScreen(navController: NavHostController, viewModel: ChannelViewModel = hiltViewModel()){
     Log.d(TAG, "ChannelScreen: ")
     val state by viewModel.state.collectAsState()
-    ChannelScreenContent(state){ channelID: String ->
-        viewModel.joinChannel(channelID) {
+    Scaffold(topBar = { BottomBar(navController = navController, featureColor = getFeatureColor())}) {
+        ChannelScreenContent(state){ channelID: String ->
             navController.navigate(Screen.MessageScreen.route + "/$channelID")
         }
     }
@@ -48,12 +49,10 @@ fun ChannelScreen(navController: NavHostController, viewModel: ChannelViewModel 
 @Composable
 fun ChannelScreenContent(state: ChannelState, onClick: (String) -> Unit){
     val channelName = remember{ mutableStateOf("")}
-
     BackGroundCompose {
         Column(
             modifier = Modifier.fillMaxSize(),
         ) {
-
             OutlinedTextField(
                 value = channelName.value,
                 onValueChange = { channelName.value = it },
@@ -75,19 +74,21 @@ fun ChannelScreenContent(state: ChannelState, onClick: (String) -> Unit){
             }
         }
     }
+
 }
 
 @Composable
 fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Unit){
     var otheruser: User? = null
     for (user in channel.users){
+        Log.d(TAG, "ChannelItem: ")
         otheruser = user
         if(user.uid != currentUserID){
             break
         }
     }
     otheruser?.let {
-        Spacer(modifier = Modifier.padding(6.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -132,7 +133,6 @@ fun PreviewScreen(){
                         User(
                             uid = "dfsdf",
                             name = "Shashank",
-                            photoURL = "https://lh3.googleusercontent.com/a/ALm5wu0FQJZiuGL765qnn_bE5F5cREFB8Q4omSbL3a2qcA=s96-c"
                         )
                     )
                 )

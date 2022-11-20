@@ -1,4 +1,4 @@
-package com.example.chatapplication.data.local
+package com.example.chatapplication.data.repository.local
 
 import androidx.room.*
 import com.example.chatapplication.domain.model.Message

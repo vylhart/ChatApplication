@@ -9,13 +9,16 @@ import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_DELETE
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_FETCH
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_SEND
+import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_UPDATE
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_ACTION
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_CHANNELID
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_DATA
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_DATE
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_MESSAGEID
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_SENDERID
+import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.domain.model.Message
+import com.example.chatapplication.domain.repository.ChannelRepository
 import com.example.chatapplication.domain.repository.MessageRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
@@ -26,7 +29,8 @@ class SyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     @Named("Remote") private val remoteRepository: MessageRepository,
-    @Named("Local")  private val localRepository:  MessageRepository
+    @Named("Local")  private val localRepository:  MessageRepository,
+    @Named("remote") private val remoteChannelRepository: ChannelRepository
     ): CoroutineWorker(context, params) {
 
 
@@ -44,8 +48,15 @@ class SyncWorker @AssistedInject constructor(
                 return when (action) {
                     ACTION_SEND -> {
                         if (messageId != null && senderId != null && data != null) {
+                            val channel = remoteChannelRepository.getChannel(channelId)
                             val message = Message(messageId = messageId, channelId = it, senderId= senderId, data = data, date = date)
                             remoteRepository.sendMessage(message)
+                            Log.d(TAG, "doWork: send message")
+                            Log.d(TAG, "doWork: ${channel.dateModified} : $date")
+                            if(channel.dateModified < date){
+                                Log.d(TAG, "doWork: update channel")
+                                remoteChannelRepository.joinChannel(Channel(channelID=channel.channelID, users = channel.users, lastMessage = message, dateModified = date, dateCreated = channel.dateCreated))
+                            }
                         }
                         Result.success()
                     }

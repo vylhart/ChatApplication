@@ -1,37 +1,38 @@
-package com.example.chatapplication.data.remote.repository
+package com.example.chatapplication.data.repository.remote.repository
 
 import android.util.Log
 import com.example.chatapplication.common.Constants.COLLECTION_CHANNEL
 import com.example.chatapplication.common.Constants.COLLECTION_USER
 import com.example.chatapplication.common.Constants.TAG
-import com.example.chatapplication.common.Constants.UNKNOWN_ERROR
 import com.example.chatapplication.common.Resource
+import com.example.chatapplication.data.model.ChannelID
 import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.domain.repository.ChannelRepository
 import com.example.chatapplication.domain.repository.UserRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
-import kotlinx.coroutines.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.tasks.await
 
-data class ChannelID(val id: String="")
 
 class ChannelRemoteRepositoryImpl(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
     private val userRepository: UserRepository
 ) : ChannelRepository {
+
     private val idList = mutableListOf<ChannelID>()
 
     private fun updateChannelIDs(): Flow<Boolean> = callbackFlow {
         try{
-            Log.d(TAG, "getChannels: enter")
+            Log.d(TAG, "getChannels: enter ${auth.currentUser?.uid}" )
             firestore.collection(COLLECTION_USER)
                 .document(auth.currentUser!!.uid)
                 .collection(COLLECTION_CHANNEL).addSnapshotListener { s,e ->
@@ -102,7 +103,6 @@ class ChannelRemoteRepositoryImpl(
             channel = Channel(
                 channelID = channelID,
                 dateCreated = System.currentTimeMillis(),
-                dateModified = System.currentTimeMillis()
             )
             firestore.collection(COLLECTION_CHANNEL).document(channelID).set(channel).await()
         }
@@ -111,6 +111,7 @@ class ChannelRemoteRepositoryImpl(
 
     override suspend fun joinChannel(channel: Channel) {
         try {
+            Log.d(TAG, "joinChannel: ")
             firestore
                 .collection(COLLECTION_USER)
                 .document(auth.currentUser!!.uid)
@@ -118,8 +119,13 @@ class ChannelRemoteRepositoryImpl(
                 .document(channel.channelID)
                 .set(ChannelID(id = channel.channelID))
 
-            val user =  userRepository.getUser()
-            channel.users.add(user)
+            userRepository.getCurrentUser().collect{
+                if(it is Resource.Success){
+                    val user = it.data
+                    if(user !in channel.users)
+                        channel.users.add(user!!)
+                }
+            }
             firestore
                 .collection(COLLECTION_CHANNEL)
                 .document(channel.channelID)
@@ -130,5 +136,6 @@ class ChannelRemoteRepositoryImpl(
             Log.e(TAG, "joinChannel: ", e)
         }
     }
-
 }
+
+

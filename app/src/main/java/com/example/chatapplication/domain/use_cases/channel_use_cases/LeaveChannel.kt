@@ -10,9 +10,9 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Named
 
-class LeaveChannel @Inject constructor(
-    @Named("local")  private val localRepository: ChannelRepository,
-    @Named("remote") private val remoteRepository: ChannelRepository
+class LeaveChannel(
+    private val localRepository: ChannelRepository,
+    private val remoteRepository: ChannelRepository
 ) {
     suspend operator fun invoke(channel: Channel) = flow {
         try {

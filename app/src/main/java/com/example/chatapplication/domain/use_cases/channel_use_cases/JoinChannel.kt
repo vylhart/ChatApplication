@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 import javax.inject.Named
 
-class JoinChannel @Inject constructor(@Named("remote") private val repository: ChannelRepository) {
+class JoinChannel(private val repository: ChannelRepository) {
     suspend operator fun invoke(channelID: String) = flow {
         try{
             emit(Resource.Loading)

@@ -5,14 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.common.Resource
+import com.example.chatapplication.domain.model.Contact
 import com.example.chatapplication.domain.use_cases.channel_use_cases.ChannelUseCases
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +34,7 @@ class ChannelViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            useCases.getChannelsFromLocalDB().onEach { result ->
+            useCases.getChannelsFromLocalDB().collect { result ->
                 when(result){
                     is Resource.Success -> {
                         Log.d(TAG, "getChannels: Success")
@@ -48,28 +48,6 @@ class ChannelViewModel @Inject constructor(
                         Log.d(TAG, "getChannels: Error")
                         state.value = ChannelState(userID = state.value.userID, error = result.message)
                     }
-                }
-            }.collect{
-
-            }
-        }
-    }
-
-    fun joinChannel(channelID: String, callback: ()-> Unit){
-        if(channelID.isEmpty()) return
-        Log.d(TAG, "joinChannel: $channelID")
-        for(channel in state.value.channels){
-            if (channel.channelID == channelID){
-                Log.d(TAG, "joinChannel: exists")
-                callback()
-                return
-            }
-        }
-        viewModelScope.launch {
-            useCases.joinChannel(channelID).collect{ result ->
-                if(result is Resource.Success && result.data){
-                    Log.d(TAG, "joinChannel: new")
-                    callback()
                 }
             }
         }

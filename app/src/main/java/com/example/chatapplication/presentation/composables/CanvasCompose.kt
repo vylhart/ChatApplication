@@ -36,7 +36,7 @@ val features= listOf(
 
 fun getFeatureColor(): FeatureColor {
     val rand = (0..3).random()
-    return features[rand]
+    return features[0]
 }
 
 fun getFeaturePath(constraints: Constraints): FeaturePath {

@@ -1,4 +1,4 @@
-package com.example.chatapplication.data.remote.repository
+package com.example.chatapplication.data.repository.remote.repository
 
 import android.util.Log
 import com.example.chatapplication.common.Constants

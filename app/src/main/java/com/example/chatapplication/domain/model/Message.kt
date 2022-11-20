@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
+@kotlinx.serialization.Serializable
 data class Message(
     @PrimaryKey
     val messageId: String = "",
