@@ -7,10 +7,9 @@ import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.domain.repository.ChannelRepository
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Named
 
 class JoinChannel(private val repository: ChannelRepository) {
+
     suspend operator fun invoke(channelID: String) = flow {
         try{
             emit(Resource.Loading)

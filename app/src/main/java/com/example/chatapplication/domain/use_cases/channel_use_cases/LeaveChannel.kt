@@ -7,8 +7,6 @@ import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.domain.repository.ChannelRepository
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Named
 
 class LeaveChannel(
     private val localRepository: ChannelRepository,

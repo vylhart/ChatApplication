@@ -6,7 +6,6 @@ import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 
 class DeleteMessage(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
     operator fun invoke(message: Message): Flow<Resource<Boolean>> = flow {

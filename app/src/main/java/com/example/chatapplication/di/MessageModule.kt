@@ -3,7 +3,7 @@ package com.example.chatapplication.di
 import android.app.Application
 import androidx.room.Room
 import com.example.chatapplication.common.Constants
-import com.example.chatapplication.data.repository.local.MessageDatabase
+import com.example.chatapplication.data.repository.local.database.MessageDatabase
 import com.example.chatapplication.data.repository.local.repository.MessageLocalRepositoryImpl
 import com.example.chatapplication.data.repository.remote.repository.MessageRemoteRepositoryImpl
 import com.example.chatapplication.data.worker.WorkerUtils

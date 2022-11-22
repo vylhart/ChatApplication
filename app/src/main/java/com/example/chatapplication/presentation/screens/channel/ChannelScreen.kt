@@ -1,7 +1,9 @@
 package com.example.chatapplication.presentation.screens.channel
 
 import android.annotation.SuppressLint
+import android.text.format.DateUtils
 import android.util.Log
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,18 +23,20 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.chatapplication.R
 import com.example.chatapplication.common.Constants.TAG
-import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.data.model.User
+import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.presentation.Screen
 import com.example.chatapplication.presentation.composables.BackGroundCompose
 import com.example.chatapplication.presentation.composables.getFeatureColor
 import com.example.chatapplication.presentation.screens.main.BottomBar
+import kotlin.math.min
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -53,20 +57,6 @@ fun ChannelScreenContent(state: ChannelState, onClick: (String) -> Unit){
         Column(
             modifier = Modifier.fillMaxSize(),
         ) {
-            OutlinedTextField(
-                value = channelName.value,
-                onValueChange = { channelName.value = it },
-                label = { Text(text = "Join Channel") },
-                trailingIcon = {
-                    IconButton(onClick = { onClick(channelName.value) }) {
-                        Icon(imageVector = Icons.Default.Send, contentDescription = "send button")
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(4.dp)
-            )
-
             LazyColumn(modifier = Modifier.fillMaxWidth()){
                 items(state.channels){ channel ->
                     ChannelItem(channel = channel, state.userID, onClick)
@@ -81,13 +71,12 @@ fun ChannelScreenContent(state: ChannelState, onClick: (String) -> Unit){
 fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Unit){
     var otheruser: User? = null
     for (user in channel.users){
-        Log.d(TAG, "ChannelItem: ")
+        Log.d(TAG, "ChannelItem: ${user.uid}")
         otheruser = user
         if(user.uid != currentUserID){
             break
         }
     }
-    otheruser?.let {
         Spacer(modifier = Modifier.padding(10.dp))
         Row(
             modifier = Modifier
@@ -97,7 +86,7 @@ fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Un
             verticalAlignment = Alignment.CenterVertically
         ) {
             Spacer(modifier = Modifier.padding(all = 3.dp))
-            CoilImage(it.photoURL)
+            CoilImage(otheruser?.photoURL)
             Column(modifier = Modifier
                 .fillMaxHeight()
                 .padding(start = 10.dp)
@@ -105,19 +94,20 @@ fun ChannelItem(channel: Channel, currentUserID: String, onClick: (String) -> Un
                 .clickable { onClick(channel.channelID) }
             ) {
                 Text(
-                    text = it.name ?: "no name",
+                    text = otheruser?.name?: "User",
                     fontWeight = FontWeight.Bold
                 )
-                Text(text = channel.channelID)
+                Text(text = channel.lastMessage.data)
             }
             Text(
                 modifier = Modifier
                     .wrapContentHeight()
                     .weight(1f),
-                text = "10:55 ",
+                text = DateUtils.getRelativeTimeSpanString(channel.lastMessage.date, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS).toString(),
+                fontSize = 10.sp
             )
         }
-    }
+
 }
 
 @Preview(showBackground = true)
@@ -143,16 +133,29 @@ fun PreviewScreen(){
 
 @Composable
 fun CoilImage(photoURL: String?) {
-    AsyncImage(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(photoURL)
-            .crossfade(true)
-            .build(),
-        placeholder = painterResource(R.drawable.ic_user),
-        contentDescription = stringResource(R.string.project_id),
-        contentScale = ContentScale.Fit,
-        modifier = Modifier
-            .clip(CircleShape)
-            .fillMaxHeight()
-    )
+    if(photoURL!=null){
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(photoURL)
+                .crossfade(true)
+                .build(),
+            placeholder = painterResource(R.drawable.ic_user),
+            contentDescription = stringResource(R.string.project_id),
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .clip(CircleShape)
+                .fillMaxHeight()
+
+        )
+    }
+    else{
+        Image(
+            painter = painterResource(id = R.drawable.ic_user),
+            contentDescription = "avatar",
+            modifier = Modifier
+                .clip(CircleShape)
+                .width(45.dp)
+                .height(45.dp)
+        )
+    }
 }

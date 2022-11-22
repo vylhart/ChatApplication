@@ -1,10 +1,9 @@
 package com.example.chatapplication.data.repository.local.repository
 
-import com.example.chatapplication.data.repository.local.ChannelDao
+import com.example.chatapplication.data.repository.local.dao.ChannelDao
 import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.domain.repository.ChannelRepository
 import kotlinx.coroutines.flow.Flow
-import javax.inject.Inject
 
 class ChannelLocalRepositoryImpl(private val dao: ChannelDao): ChannelRepository {
     override suspend fun getChannels(): Flow<List<Channel>> {

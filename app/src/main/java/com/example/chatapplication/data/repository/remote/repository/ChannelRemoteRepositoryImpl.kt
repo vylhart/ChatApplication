@@ -48,7 +48,7 @@ class ChannelRemoteRepositoryImpl(
         catch (e: Exception){
             Log.e(TAG, "updateChannelIDs: ", e)
         }
-        awaitClose {  }
+        awaitClose { close() }
     }
 
     private suspend fun getChannelsList() = coroutineScope {

@@ -9,7 +9,6 @@ import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_DELETE
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_FETCH
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_SEND
-import com.example.chatapplication.data.worker.WorkerUtils.Companion.ACTION_UPDATE
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_ACTION
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_CHANNELID
 import com.example.chatapplication.data.worker.WorkerUtils.Companion.KEY_DATA

@@ -3,8 +3,6 @@ package com.example.chatapplication.domain.use_cases.chat_use_cases
 import android.util.Log
 import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.domain.repository.MessageRepository
-import javax.inject.Inject
-import javax.inject.Named
 
 class GetMessagesFromNetwork(
     private val localRepository: MessageRepository,

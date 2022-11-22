@@ -6,8 +6,6 @@ import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Named
 
 class GetMessagesFromLocalDB(private val repository: MessageRepository) {
     operator fun invoke(channel: String):Flow<Resource<List<Message>>> = flow {

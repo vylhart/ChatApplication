@@ -1,9 +1,5 @@
 package com.example.chatapplication.common
 
-import android.util.Log
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-
 object Constants {
     const val TAG = "Chat App: "
     const val COLLECTION_MESSAGE = "collection_msg"
@@ -11,7 +7,10 @@ object Constants {
     const val COLLECTION_USER = "collection_user"
     const val CHANNEL_ID = "channelID"
     const val DATABASE_NAME = "message_db"
+    const val PHONE_NUMBER = "phoneNumber"
     const val SIGN_IN_REQUEST = "signInRequest"
     const val SIGN_UP_REQUEST = "signUpRequest"
     const val UNKNOWN_ERROR = "Something went wrong"
+    const val LOCAL =  "local"
+    const val REMOTE = "remote"
 }

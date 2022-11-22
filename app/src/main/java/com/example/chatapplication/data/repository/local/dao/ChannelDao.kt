@@ -1,4 +1,4 @@
-package com.example.chatapplication.data.repository.local
+package com.example.chatapplication.data.repository.local.dao
 
 import androidx.room.*
 import com.example.chatapplication.domain.model.Channel

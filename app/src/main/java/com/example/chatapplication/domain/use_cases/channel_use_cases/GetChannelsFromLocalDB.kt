@@ -6,8 +6,6 @@ import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.repository.ChannelRepository
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
-import javax.inject.Named
 
 class GetChannelsFromLocalDB(private val repository: ChannelRepository) {
     operator fun invoke() = flow {

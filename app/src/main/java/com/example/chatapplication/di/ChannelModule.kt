@@ -1,6 +1,6 @@
 package com.example.chatapplication.di
 
-import com.example.chatapplication.data.repository.local.MessageDatabase
+import com.example.chatapplication.data.repository.local.database.MessageDatabase
 import com.example.chatapplication.data.repository.local.repository.ChannelLocalRepositoryImpl
 import com.example.chatapplication.data.repository.remote.repository.ChannelRemoteRepositoryImpl
 import com.example.chatapplication.domain.repository.ChannelRepository
