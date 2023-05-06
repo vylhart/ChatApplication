@@ -7,7 +7,7 @@ import androidx.compose.ui.unit.Constraints
 import com.example.chatapplication.presentation.theme.*
 import kotlin.math.abs
 
-val features= listOf(
+val features = listOf(
     FeatureColor(
         BlueViolet1,
         BlueViolet2,
@@ -81,7 +81,7 @@ fun getFeaturePath(constraints: Constraints): FeaturePath {
     )
 }
 
-fun Path.standardQuadTo(from: Offset, to: Offset){
+fun Path.standardQuadTo(from: Offset, to: Offset) {
     quadraticBezierTo(
         from.x,
         from.y,
@@ -92,12 +92,12 @@ fun Path.standardQuadTo(from: Offset, to: Offset){
 
 data class FeaturePath(
     val lightPath: Path,
-    val mediumPath: Path
+    val mediumPath: Path,
 )
 
 data class FeatureColor(
     val lightColor: Color,
     val mediumColor: Color,
     val darkColor: Color,
-    val extraDarkColor: Color
+    val extraDarkColor: Color,
 )

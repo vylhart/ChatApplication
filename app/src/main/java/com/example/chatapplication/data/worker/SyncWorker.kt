@@ -28,9 +28,9 @@ class SyncWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     @Named("Remote") private val remoteRepository: MessageRepository,
-    @Named("Local")  private val localRepository:  MessageRepository,
-    @Named("remote") private val remoteChannelRepository: ChannelRepository
-    ): CoroutineWorker(context, params) {
+    @Named("Local") private val localRepository: MessageRepository,
+    @Named("remote") private val remoteChannelRepository: ChannelRepository,
+) : CoroutineWorker(context, params) {
 
 
     override suspend fun doWork(): Result {
@@ -43,32 +43,52 @@ class SyncWorker @AssistedInject constructor(
             val date = inputData.getLong(KEY_DATE, 0)
             Log.d(TAG, "doWork: $action")
 
-            channelId?.let{
+            channelId?.let {
                 return when (action) {
                     ACTION_SEND -> {
                         if (messageId != null && senderId != null && data != null) {
                             val channel = remoteChannelRepository.getChannel(channelId)
-                            val message = Message(messageId = messageId, channelId = it, senderId= senderId, data = data, date = date)
+                            val message = Message(
+                                messageId = messageId,
+                                channelId = it,
+                                senderId = senderId,
+                                data = data,
+                                date = date
+                            )
                             remoteRepository.sendMessage(message)
                             Log.d(TAG, "doWork: send message")
                             Log.d(TAG, "doWork: ${channel.dateModified} : $date")
-                            if(channel.dateModified < date){
+                            if (channel.dateModified < date) {
                                 Log.d(TAG, "doWork: update channel")
-                                remoteChannelRepository.joinChannel(Channel(channelID=channel.channelID, users = channel.users, lastMessage = message, dateModified = date, dateCreated = channel.dateCreated))
+                                remoteChannelRepository.joinChannel(
+                                    Channel(
+                                        channelID = channel.channelID,
+                                        users = channel.users,
+                                        lastMessage = message,
+                                        dateModified = date,
+                                        dateCreated = channel.dateCreated
+                                    )
+                                )
                             }
                         }
                         Result.success()
                     }
                     ACTION_DELETE -> {
                         if (messageId != null && senderId != null && data != null) {
-                            val message = Message(messageId = messageId, channelId = it, senderId= senderId, data = data, date = date)
+                            val message = Message(
+                                messageId = messageId,
+                                channelId = it,
+                                senderId = senderId,
+                                data = data,
+                                date = date
+                            )
                             remoteRepository.deleteMessage(message)
                         }
                         Result.success()
                     }
                     ACTION_FETCH -> {
-                        remoteRepository.getMessages(it).collect{ list ->
-                            list.forEach{ msg ->
+                        remoteRepository.getMessages(it).collect { list ->
+                            list.forEach { msg ->
                                 Log.d(TAG, "doWork: fetching -> ${msg.data}")
                                 localRepository.sendMessage(msg)
                             }

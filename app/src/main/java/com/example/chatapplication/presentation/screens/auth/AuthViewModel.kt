@@ -17,22 +17,24 @@ import javax.inject.Inject
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val authUseCases: AuthUseCases,
-    private val userUseCases: UserUseCases
-): ViewModel()  {
+    private val userUseCases: UserUseCases,
+) : ViewModel() {
 
     val isUserAuthenticated get() = authUseCases.isUserAuthenticated()
     var state = MutableStateFlow(AuthState(isSignedIn = isUserAuthenticated))
         private set
 
-    fun beginSignIn(number: String, activity: MainActivity){
+    fun beginSignIn(number: String, activity: MainActivity) {
         Log.d(TAG, "beginSignIn: ")
         viewModelScope.launch {
-            authUseCases.beginSignIn(number, activity).collect{
-                when(it){
+            authUseCases.beginSignIn(number, activity).collect {
+                when (it) {
                     is Resource.Loading -> state.value = AuthState(isLoading = true)
-                    is Resource.Error ->   state.value = AuthState(error = it.message)
+                    is Resource.Error -> state.value = AuthState(error = it.message)
                     is Resource.Success -> {
-                        if(it.data){ checkNewUser() }
+                        if (it.data) {
+                            checkNewUser()
+                        }
                         state.value = AuthState(codeSent = true, isSignedIn = it.data)
                     }
                 }
@@ -40,13 +42,13 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    fun firebaseSignIn(code: String){
+    fun firebaseSignIn(code: String) {
         Log.d(TAG, "firebaseSignIn: ")
-        viewModelScope.launch{
-            authUseCases.firebaseSignIn(code).collect{
-                when(it){
+        viewModelScope.launch {
+            authUseCases.firebaseSignIn(code).collect {
+                when (it) {
                     is Resource.Loading -> state.value = AuthState(isLoading = true)
-                    is Resource.Error ->   state.value = AuthState(error = it.message)
+                    is Resource.Error -> state.value = AuthState(error = it.message)
                     is Resource.Success -> {
                         state.value = AuthState(isSignedIn = it.data)
                         checkNewUser()
@@ -56,37 +58,40 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-    private fun checkNewUser(){
+    private fun checkNewUser() {
         Log.d(TAG, "checkNewUser: ")
         viewModelScope.launch {
-            userUseCases.getCurrentUser().collect{
-                when(it){
+            userUseCases.getCurrentUser().collect {
+                when (it) {
                     is Resource.Loading -> state.value = AuthState(isLoading = true)
-                    is Resource.Error   -> state.value = AuthState(error = it.message)
+                    is Resource.Error -> state.value = AuthState(error = it.message)
                     is Resource.Success -> {
-                        Log.d(TAG, "checkNewUser: success ${it.data==null}")
-                        state.value = AuthState(isNewUser = it.data==null, isSignedIn = state.value.isSignedIn)
+                        Log.d(TAG, "checkNewUser: success ${it.data == null}")
+                        state.value = AuthState(
+                            isNewUser = it.data == null,
+                            isSignedIn = state.value.isSignedIn
+                        )
                     }
-                        
+
                 }
             }
         }
     }
 
-    fun addNewUser(name: String, navigateToChannelScreen: () -> Unit){
+    fun addNewUser(name: String, navigateToChannelScreen: () -> Unit) {
         Log.d(TAG, "addNewUser: ")
         viewModelScope.launch {
-            userUseCases.addNewUser(name).collect{
-                when(it){
+            userUseCases.addNewUser(name).collect {
+                when (it) {
                     is Resource.Loading -> state.value = AuthState(isLoading = true)
-                    is Resource.Error   -> state.value = AuthState(error = it.message)
+                    is Resource.Error -> state.value = AuthState(error = it.message)
                     is Resource.Success -> navigateToChannelScreen()
                 }
             }
         }
     }
 
-    fun signOut(){
+    fun signOut() {
         authUseCases.signOut().launchIn(viewModelScope)
     }
 }

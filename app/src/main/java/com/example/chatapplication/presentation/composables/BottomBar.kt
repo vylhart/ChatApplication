@@ -18,7 +18,7 @@ import com.example.chatapplication.presentation.composables.FeatureColor
 
 
 @Composable
-fun BottomBar(navController: NavHostController, featureColor: FeatureColor){
+fun BottomBar(navController: NavHostController, featureColor: FeatureColor) {
     val screens = listOf(
         Screen.ChannelScreen,
         Screen.StatusScreen,
@@ -31,7 +31,11 @@ fun BottomBar(navController: NavHostController, featureColor: FeatureColor){
         contentColor = featureColor.lightColor
     ) {
         screens.forEach { screen ->
-            AddItem(screen = screen, currentDestination = currentDestination, navController = navController)
+            AddItem(
+                screen = screen,
+                currentDestination = currentDestination,
+                navController = navController
+            )
         }
     }
 
@@ -41,11 +45,11 @@ fun BottomBar(navController: NavHostController, featureColor: FeatureColor){
 fun RowScope.AddItem(
     screen: Screen,
     currentDestination: NavDestination?,
-    navController: NavHostController
-){
+    navController: NavHostController,
+) {
     BottomNavigationItem(
         label = {
-                Text(text = screen.title)
+            Text(text = screen.title)
         },
         icon = {
             Icon(
@@ -53,9 +57,9 @@ fun RowScope.AddItem(
                 contentDescription = "Navigation Icon"
             )
         },
-        selected = currentDestination?.hierarchy?.any{  it.route == screen.route } == true,
+        selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true,
         onClick = {
-            navController.navigate(screen.route){
+            navController.navigate(screen.route) {
                 popUpTo(navController.graph.findStartDestination().id)
                 launchSingleTop = true
             }

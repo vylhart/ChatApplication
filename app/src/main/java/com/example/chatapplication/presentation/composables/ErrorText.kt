@@ -10,7 +10,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ErrorText(error: String){
+fun ErrorText(error: String) {
     Text(
         text = error,
         color = MaterialTheme.colors.error,

@@ -10,16 +10,15 @@ import kotlinx.coroutines.flow.flow
 
 class LeaveChannel(
     private val localRepository: ChannelRepository,
-    private val remoteRepository: ChannelRepository
+    private val remoteRepository: ChannelRepository,
 ) {
     suspend operator fun invoke(channel: Channel) = flow {
         try {
             localRepository.leaveChannel(channel)
             remoteRepository.leaveChannel(channel)
             emit(Resource.Success(true))
-        }
-        catch (e: Exception){
-            emit(Resource.Error(e.localizedMessage?: UNKNOWN_ERROR))
+        } catch (e: Exception) {
+            emit(Resource.Error(e.localizedMessage ?: UNKNOWN_ERROR))
             Log.e(TAG, "invoke: ", e)
         }
     }

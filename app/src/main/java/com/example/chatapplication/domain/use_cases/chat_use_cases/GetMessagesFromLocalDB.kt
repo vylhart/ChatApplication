@@ -8,14 +8,13 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
 class GetMessagesFromLocalDB(private val repository: MessageRepository) {
-    operator fun invoke(channel: String):Flow<Resource<List<Message>>> = flow {
-        try{
+    operator fun invoke(channel: String): Flow<Resource<List<Message>>> = flow {
+        try {
             emit(Resource.Loading)
-            repository.getMessages(channel).collect{ list->
+            repository.getMessages(channel).collect { list ->
                 emit(Resource.Success(data = list))
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: UNKNOWN_ERROR))
         }
     }

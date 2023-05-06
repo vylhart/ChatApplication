@@ -9,14 +9,13 @@ import kotlinx.coroutines.flow.flow
 
 class GetChannelsFromLocalDB(private val repository: ChannelRepository) {
     operator fun invoke() = flow {
-        try{
+        try {
             Log.d(TAG, "invoke: local")
             emit(Resource.Loading)
-            repository.getChannels().collect{
+            repository.getChannels().collect {
                 emit(Resource.Success(data = it))
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "invoke: ", e)
             emit(Resource.Error(e.localizedMessage ?: Constants.UNKNOWN_ERROR))
         }

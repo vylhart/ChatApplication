@@ -7,5 +7,5 @@ data class ChannelState(
     val userID: String,
     val isLoading: Boolean = false,
     val error: String = "",
-    val channels: List<Channel> = emptyList()
+    val channels: List<Channel> = emptyList(),
 )

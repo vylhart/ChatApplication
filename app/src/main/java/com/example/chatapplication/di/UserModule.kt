@@ -19,7 +19,10 @@ object UserModule {
 
     @Singleton
     @Provides
-    fun provideRemoteUserRepository(firestore: FirebaseFirestore, auth: FirebaseAuth): UserRepository {
+    fun provideRemoteUserRepository(
+        firestore: FirebaseFirestore,
+        auth: FirebaseAuth,
+    ): UserRepository {
         return UserRepositoryImpl(firestore = firestore, auth = auth)
     }
 

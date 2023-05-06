@@ -11,15 +11,14 @@ import kotlinx.coroutines.flow.flow
 class JoinChannel(private val repository: ChannelRepository) {
 
     suspend operator fun invoke(channelID: String) = flow {
-        try{
+        try {
             emit(Resource.Loading)
             val channel: Channel = repository.getChannel(channelID)
             repository.joinChannel(channel)
             emit(Resource.Success(true))
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "invoke: ", e)
-            emit(Resource.Error(e.localizedMessage?: UNKNOWN_ERROR))
+            emit(Resource.Error(e.localizedMessage ?: UNKNOWN_ERROR))
         }
     }
 }

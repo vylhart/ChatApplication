@@ -11,17 +11,17 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 
-class MessageRemoteRepositoryImpl (private val firestore: FirebaseFirestore): MessageRepository {
+class MessageRemoteRepositoryImpl(private val firestore: FirebaseFirestore) : MessageRepository {
 
     override suspend fun getMessages(channel: String): Flow<List<Message>> = callbackFlow {
         firestore.collection(COLLECTION_CHANNEL)
             .document(channel)
             .collection(Constants.COLLECTION_MESSAGE)
             .orderBy("date")
-            .addSnapshotListener{ snapshot, _ ->
+            .addSnapshotListener { snapshot, _ ->
                 snapshot?.let {
                     val list = mutableListOf<Message>()
-                    for(item in it){
+                    for (item in it) {
                         val msg: Message = item.toObject(Message::class.java)
                         //Log.d(TAG, "fetchMessages: ${msg.data}")
                         list.add(msg)
@@ -29,11 +29,11 @@ class MessageRemoteRepositoryImpl (private val firestore: FirebaseFirestore): Me
                     trySend(list)
                 }
             }
-        awaitClose {  }
+        awaitClose { }
     }
 
 
-    override suspend fun deleteMessage(message: Message){
+    override suspend fun deleteMessage(message: Message) {
         firestore.collection(COLLECTION_CHANNEL)
             .document(message.channelId)
             .collection(Constants.COLLECTION_MESSAGE)
@@ -41,14 +41,14 @@ class MessageRemoteRepositoryImpl (private val firestore: FirebaseFirestore): Me
             .delete()
     }
 
-    override suspend fun sendMessage(message: Message){
+    override suspend fun sendMessage(message: Message) {
         firestore.collection(COLLECTION_CHANNEL)
             .document(message.channelId)
             .collection(Constants.COLLECTION_MESSAGE)
             .document(message.messageId)
             .set(message)
             .addOnFailureListener {
-                Log.i(TAG, "sendMessage: "+it.localizedMessage)
+                Log.i(TAG, "sendMessage: " + it.localizedMessage)
             }.addOnSuccessListener {
                 Log.i(TAG, "sendMessage: success")
             }

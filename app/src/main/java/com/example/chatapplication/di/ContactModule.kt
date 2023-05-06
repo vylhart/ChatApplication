@@ -32,13 +32,19 @@ object ContactModule {
     @Singleton
     @Provides
     @Named(Constants.REMOTE)
-    fun provideRemoteContactRepository(application: Application, firestore: FirebaseFirestore): ContactRepository {
+    fun provideRemoteContactRepository(
+        application: Application,
+        firestore: FirebaseFirestore,
+    ): ContactRepository {
         return ContactRemoteRepositoryImpl(application, firestore)
     }
 
     @Singleton
     @Provides
-    fun provideContactUseCases(@Named(Constants.LOCAL)  repository: ContactRepository, workerUtils: WorkerUtils): ContactUseCases {
+    fun provideContactUseCases(
+        @Named(Constants.LOCAL) repository: ContactRepository,
+        workerUtils: WorkerUtils,
+    ): ContactUseCases {
         return ContactUseCases(
             getContacts = GetContacts(repository = repository, workerUtils = workerUtils)
         )

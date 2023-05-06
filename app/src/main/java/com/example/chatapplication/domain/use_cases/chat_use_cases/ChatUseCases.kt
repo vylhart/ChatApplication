@@ -4,5 +4,5 @@ data class ChatUseCases(
     val deleteMessage: DeleteMessage,
     val sendMessage: SendMessage,
     val getMessagesFromLocalDB: GetMessagesFromLocalDB,
-    val getMessagesFromNetwork: GetMessagesFromNetwork
+    val getMessagesFromNetwork: GetMessagesFromNetwork,
 )

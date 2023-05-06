@@ -25,8 +25,8 @@ fun AuthScreen(navController: NavHostController, viewModel: AuthViewModel, activ
     Log.d(TAG, "AuthScreen: ")
     val state = viewModel.state.collectAsState()
     val navigateToChannelScreen = {
-        navController.navigate(Screen.MainScreen.route){
-            popUpTo(Screen.SignInScreen.route){
+        navController.navigate(Screen.MainScreen.route) {
+            popUpTo(Screen.SignInScreen.route) {
                 inclusive = true
             }
         }
@@ -36,19 +36,16 @@ fun AuthScreen(navController: NavHostController, viewModel: AuthViewModel, activ
 
     HandleSignInState(state.value)
     SignInScreenContent(state.value) {
-        if(!state.value.codeSent && !state.value.isSignedIn){
+        if (!state.value.codeSent && !state.value.isSignedIn) {
             Log.d(TAG, "AuthScreen: 1")
             viewModel.beginSignIn(it, activity)
-        }
-        else if(state.value.codeSent && !state.value.isSignedIn){
+        } else if (state.value.codeSent && !state.value.isSignedIn) {
             Log.d(TAG, "AuthScreen: 2")
             viewModel.firebaseSignIn(it)
-        }
-        else if(state.value.isSignedIn && state.value.isNewUser){
+        } else if (state.value.isSignedIn && state.value.isNewUser) {
             Log.d(TAG, "AuthScreen: 3")
             viewModel.addNewUser(it, navigateToChannelScreen)
-        }
-        else{
+        } else {
             navigateToChannelScreen()
         }
     }
@@ -77,21 +74,22 @@ fun SignInScreenContent(state: AuthState, onClick: (String) -> Unit) {
             OutlinedTextField(
                 value = input,
                 onValueChange = { input = it },
-                label = { Text(text =
+                label = {
+                    Text(
+                        text =
 
-                    if(state.codeSent && !state.isSignedIn){
-                        "Enter the code"
-                    }
-                    else if(state.isSignedIn){
-                        "Enter your name"
-                    }
-                    else{
-                        "Enter phone number"
-                    }
-                    )},
+                        if (state.codeSent && !state.isSignedIn) {
+                            "Enter the code"
+                        } else if (state.isSignedIn) {
+                            "Enter your name"
+                        } else {
+                            "Enter phone number"
+                        }
+                    )
+                },
                 trailingIcon = {
                     IconButton(onClick = {
-                        if(input.isNotEmpty()){
+                        if (input.isNotEmpty()) {
                             onClick(input)
                         }
                         input = ""
@@ -109,19 +107,19 @@ fun SignInScreenContent(state: AuthState, onClick: (String) -> Unit) {
 
 @Composable
 fun HandleSignInState(
-    state: AuthState
+    state: AuthState,
 ) {
-    if(state.error.isNotBlank()) {
+    if (state.error.isNotBlank()) {
         ErrorText(error = state.error)
     }
-    if(state.isLoading){
+    if (state.isLoading) {
         CircularProgressIndicator()
     }
 }
 
 @Preview
 @Composable
-fun PreviewSignIn(){
+fun PreviewSignIn() {
     SignInScreenContent(AuthState()) {
         {}
     }

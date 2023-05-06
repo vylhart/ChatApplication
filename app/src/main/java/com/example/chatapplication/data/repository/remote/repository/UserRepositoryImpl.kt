@@ -15,26 +15,26 @@ import kotlinx.coroutines.tasks.await
 
 class UserRepositoryImpl(
     private val firestore: FirebaseFirestore,
-    private val auth: FirebaseAuth): UserRepository {
+    private val auth: FirebaseAuth,
+) : UserRepository {
     private var user: User? = null
 
-    override suspend fun getCurrentUser(): Flow<Resource<User?>> = flow{
-        try{
-            if(user!=null){
+    override suspend fun getCurrentUser(): Flow<Resource<User?>> = flow {
+        try {
+            if (user != null) {
                 emit(Resource.Success(user))
-            }else{
+            } else {
                 auth.currentUser?.uid?.let { getUser(it) }
                 emit(Resource.Success(user))
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "getCurrentUser: ", e)
-            emit(Resource.Error(e.localizedMessage?: UNKNOWN_ERROR))
+            emit(Resource.Error(e.localizedMessage ?: UNKNOWN_ERROR))
         }
     }
 
     override suspend fun addNewUser(name: String): Flow<Resource<Boolean>> = flow {
-        try{
+        try {
             auth.currentUser?.apply {
                 user = User(
                     uid = uid,
@@ -45,18 +45,17 @@ class UserRepositoryImpl(
                 firestore.collection(COLLECTION_USER).document(uid).set(user!!).await()
             }
             emit(Resource.Success(true))
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "getCurrentUser: ", e)
-            emit(Resource.Error(e.localizedMessage?: UNKNOWN_ERROR))
+            emit(Resource.Error(e.localizedMessage ?: UNKNOWN_ERROR))
         }
     }
 
     override suspend fun getUser(uid: String): User? {
-        user = firestore.collection(COLLECTION_USER).document(uid).get().await().toObject(User::class.java)
+        user = firestore.collection(COLLECTION_USER).document(uid).get().await()
+            .toObject(User::class.java)
         return user
     }
-
 
 
 }

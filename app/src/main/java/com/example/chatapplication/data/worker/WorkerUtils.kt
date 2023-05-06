@@ -6,8 +6,8 @@ import com.example.chatapplication.domain.model.Message
 import javax.inject.Inject
 
 
-class WorkerUtils @Inject constructor(context: Context){
-    companion object{
+class WorkerUtils @Inject constructor(context: Context) {
+    companion object {
         const val ACTION_SEND = "send"
         const val ACTION_FETCH = "fetch"
         const val ACTION_DELETE = "delete"
@@ -19,7 +19,9 @@ class WorkerUtils @Inject constructor(context: Context){
         const val KEY_DATE = "date"
     }
 
-    private val constraints = Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+    private val constraints =
+        Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build()
+
     private val workManager = WorkManager.getInstance(context)
 
     private fun getData(action: String, message: Message): Data {
@@ -55,10 +57,10 @@ class WorkerUtils @Inject constructor(context: Context){
         workManager.enqueue(getRequest(data))
     }
 
-    fun syncContacts(){
-        val request =  OneTimeWorkRequestBuilder<ContactWorker>()
-        .setConstraints(constraints)
-        .build()
+    fun syncContacts() {
+        val request = OneTimeWorkRequestBuilder<ContactWorker>()
+            .setConstraints(constraints)
+            .build()
         workManager.enqueue(request)
     }
 }

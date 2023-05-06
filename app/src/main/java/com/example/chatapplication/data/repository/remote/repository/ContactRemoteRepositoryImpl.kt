@@ -19,22 +19,21 @@ import kotlinx.coroutines.tasks.await
 
 class ContactRemoteRepositoryImpl(
     private val app: Application,
-    private val firestore: FirebaseFirestore
-): ContactRepository {
+    private val firestore: FirebaseFirestore,
+) : ContactRepository {
 
     override suspend fun getContacts() = flow {
         emit(
             supervisorScope {
                 val deferred = getPhoneContacts(app).map { contact ->
                     async {
-                        return@async try{
-                            val users: MutableList<User> =  firestore
+                        return@async try {
+                            val users: MutableList<User> = firestore
                                 .collection(Constants.COLLECTION_USER)
                                 .whereEqualTo(PHONE_NUMBER, contact.number).limit(1)
                                 .get().await().toObjects(User::class.java)
-                            if(users.isNotEmpty()) users[0].toContact() else null
-                        }
-                        catch (e: Exception){
+                            if (users.isNotEmpty()) users[0].toContact() else null
+                        } catch (e: Exception) {
                             Log.e(TAG, "getContacts: ", e)
                             null
                         }

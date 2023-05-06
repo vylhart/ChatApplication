@@ -11,7 +11,7 @@ data class User(
     val name: String = "",
     val photoURL: String? = null,
     var phoneNumber: String = "",
-    val channelIDs: HashMap<String, String> = HashMap()
+    val channelIDs: HashMap<String, String> = HashMap(),
 )
 
 fun User.toContact(): Contact {

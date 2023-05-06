@@ -5,7 +5,7 @@ import com.example.chatapplication.domain.model.Message
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface MessageDao{
+interface MessageDao {
     @Query("SELECT * FROM message WHERE channelId = :id")
     fun getMessages(id: String): Flow<List<Message>>
 
@@ -14,5 +14,4 @@ interface MessageDao{
 
     @Delete
     suspend fun deleteMessage(message: Message)
-
 }

@@ -19,28 +19,29 @@ import com.example.chatapplication.presentation.screens.status.StatusScreen
 @Composable
 fun ChatNavigation(navController: NavHostController, activity: MainActivity) {
     val authViewModel: AuthViewModel = hiltViewModel()
-    val startDestination =  if(authViewModel.isUserAuthenticated) Screen.MainScreen.route else Screen.SignInScreen.route
+    val startDestination =
+        if (authViewModel.isUserAuthenticated) Screen.MainScreen.route else Screen.SignInScreen.route
 
     NavHost(
         navController = navController,
         startDestination = startDestination
-    ){
-        composable(route = Screen.MessageScreen.route+"/{$CHANNEL_ID}"){
+    ) {
+        composable(route = Screen.MessageScreen.route + "/{$CHANNEL_ID}") {
             MessageScreen(navController)
         }
-        composable(route = Screen.SignInScreen.route){
+        composable(route = Screen.SignInScreen.route) {
             AuthScreen(navController, authViewModel, activity)
         }
 
 
-        navigation(startDestination=Screen.ChannelScreen.route, route = Screen.MainScreen.route){
-            composable(route = Screen.ChannelScreen.route){
+        navigation(startDestination = Screen.ChannelScreen.route, route = Screen.MainScreen.route) {
+            composable(route = Screen.ChannelScreen.route) {
                 ChannelScreen(navController)
             }
-            composable(route = Screen.ContactScreen.route){
+            composable(route = Screen.ContactScreen.route) {
                 ContactScreen(navController)
             }
-            composable(route = Screen.StatusScreen.route){
+            composable(route = Screen.StatusScreen.route) {
                 StatusScreen(navController)
             }
         }

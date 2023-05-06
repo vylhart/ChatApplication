@@ -20,9 +20,9 @@ import com.example.chatapplication.presentation.composables.ErrorText
 import com.example.chatapplication.presentation.composables.FeatureColor
 
 @Composable
-fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel = hiltViewModel()){
+fun MessageScreen(navController: NavHostController, viewModel: MessageViewModel = hiltViewModel()) {
     val state by viewModel.state.collectAsState()
-    val sendMessage = {msg:String ->  viewModel.sendMessage(msg)}
+    val sendMessage = { msg: String -> viewModel.sendMessage(msg) }
     MessageScreenContent(state, sendMessage)
 }
 
@@ -32,13 +32,18 @@ fun MessageScreenContent(state: MessageState, sendMessage: (String) -> Unit) {
 
     BackGroundCompose {
         Column(
-            modifier = Modifier.fillMaxSize().padding(5.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(5.dp),
             verticalArrangement = Arrangement.Bottom
         ) {
-            LazyColumn(modifier = Modifier.fillMaxWidth().weight(13f)
-            ){
-                items(state.messages){ msg ->
-                    ListItem(msg, it, msg.senderId==state.userId)
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(13f)
+            ) {
+                items(state.messages) { msg ->
+                    ListItem(msg, it, msg.senderId == state.userId)
                 }
             }
 
@@ -46,14 +51,17 @@ fun MessageScreenContent(state: MessageState, sendMessage: (String) -> Unit) {
             {
                 OutlinedTextField(
                     value = messageText,
-                    onValueChange = {messageText=it},
+                    onValueChange = { messageText = it },
                     modifier = Modifier.fillMaxWidth(),
                     trailingIcon = {
                         IconButton(onClick = {
                             sendMessage(messageText)
                             messageText = ""
                         }) {
-                            Icon(imageVector = Icons.Default.Send, contentDescription = "send button")
+                            Icon(
+                                imageVector = Icons.Default.Send,
+                                contentDescription = "send button"
+                            )
                         }
                     }
                 )
@@ -64,12 +72,13 @@ fun MessageScreenContent(state: MessageState, sendMessage: (String) -> Unit) {
 }
 
 @Composable
-fun ListItem(message: Message, featureColor: FeatureColor, alignRight: Boolean){
+fun ListItem(message: Message, featureColor: FeatureColor, alignRight: Boolean) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if(alignRight) Arrangement.End else Arrangement.Start
+        horizontalArrangement = if (alignRight) Arrangement.End else Arrangement.Start
     ) {
-        Text(text = message.data,
+        Text(
+            text = message.data,
             color = Color.White,
             fontSize = MaterialTheme.typography.subtitle1.fontSize,
             modifier = Modifier
@@ -85,10 +94,10 @@ fun ListItem(message: Message, featureColor: FeatureColor, alignRight: Boolean){
 
 @Composable
 fun HandleMessageState(state: MessageState) {
-    if(state.error.isNotBlank()) {
+    if (state.error.isNotBlank()) {
         ErrorText(error = state.error)
     }
-    if(state.isLoading) {
+    if (state.isLoading) {
         CircularProgressIndicator()
     }
 }

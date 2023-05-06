@@ -12,7 +12,7 @@ import com.example.chatapplication.presentation.screens.main.BottomBar
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun StatusScreen(navController: NavHostController) {
-    Scaffold(topBar = { BottomBar(navController = navController, getFeatureColor())}) {
+    Scaffold(topBar = { BottomBar(navController = navController, getFeatureColor()) }) {
         BackGroundCompose {
             Text(text = "status")
         }

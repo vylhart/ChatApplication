@@ -16,15 +16,15 @@ import javax.inject.Inject
 class ChannelViewModel @Inject constructor(
     private val useCases: ChannelUseCases,
     auth: FirebaseAuth,
-): ViewModel() {
+) : ViewModel() {
     var state = MutableStateFlow(ChannelState(auth.currentUser!!.uid))
-    private set
+        private set
 
     init {
         getChannels()
     }
 
-    private fun getChannels(){
+    private fun getChannels() {
         Log.d(TAG, "getChannels: ")
         viewModelScope.launch {
             useCases.getChannelsFromNetwork()
@@ -32,10 +32,11 @@ class ChannelViewModel @Inject constructor(
 
         viewModelScope.launch {
             useCases.getChannelsFromLocalDB().collect { result ->
-                when(result){
+                when (result) {
                     is Resource.Success -> {
                         Log.d(TAG, "getChannels: Success")
-                        state.value = ChannelState(userID = state.value.userID, channels = result.data)
+                        state.value =
+                            ChannelState(userID = state.value.userID, channels = result.data)
                     }
                     is Resource.Loading -> {
                         Log.d(TAG, "getChannels: Loading")
@@ -43,7 +44,8 @@ class ChannelViewModel @Inject constructor(
                     }
                     is Resource.Error -> {
                         Log.d(TAG, "getChannels: Error")
-                        state.value = ChannelState(userID = state.value.userID, error = result.message)
+                        state.value =
+                            ChannelState(userID = state.value.userID, error = result.message)
                     }
                 }
             }

@@ -20,7 +20,7 @@ class MainActivity : ComponentActivity() {
             ChatApplicationTheme {
                 val navController = rememberNavController()
                 Surface(modifier = Modifier.fillMaxSize()) {
-                        ChatNavigation(navController = navController, activity = this)
+                    ChatNavigation(navController = navController, activity = this)
                 }
             }
         }

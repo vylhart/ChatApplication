@@ -15,10 +15,10 @@ class Channel(
     val users: MutableList<User> = mutableListOf(),
     val lastMessage: Message = Message(),
     val dateCreated: Long = 0L,
-    val dateModified: Long = 0L
+    val dateModified: Long = 0L,
 )
 
-class ListConverter{
+class ListConverter {
 
     @TypeConverter
     fun listToString(list: MutableList<User>?): String {

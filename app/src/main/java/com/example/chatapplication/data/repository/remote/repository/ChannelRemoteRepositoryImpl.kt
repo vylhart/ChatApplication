@@ -25,17 +25,17 @@ import kotlinx.coroutines.tasks.await
 class ChannelRemoteRepositoryImpl(
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : ChannelRepository {
 
     private val idList = mutableListOf<ChannelID>()
 
     private fun updateChannelIDs(): Flow<Boolean> = callbackFlow {
-        try{
-            Log.d(TAG, "getChannels: enter ${auth.currentUser?.uid}" )
+        try {
+            Log.d(TAG, "getChannels: enter ${auth.currentUser?.uid}")
             firestore.collection(COLLECTION_USER)
                 .document(auth.currentUser!!.uid)
-                .collection(COLLECTION_CHANNEL).addSnapshotListener { s,e ->
+                .collection(COLLECTION_CHANNEL).addSnapshotListener { s, e ->
                     idList.clear()
                     s?.map {
                         val channelID: ChannelID = it.toObject(ChannelID::class.java)
@@ -44,8 +44,7 @@ class ChannelRemoteRepositoryImpl(
                     Log.d(TAG, "getChannelIDs: updated")
                     trySend(true)
                 }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "updateChannelIDs: ", e)
         }
         awaitClose { close() }
@@ -54,7 +53,7 @@ class ChannelRemoteRepositoryImpl(
     private suspend fun getChannelsList() = coroutineScope {
         val deferred = idList.map { id ->
             async {
-                val channel =  firestore
+                val channel = firestore
                     .collection(COLLECTION_CHANNEL)
                     .document(id.id)
                     .get().await()
@@ -67,7 +66,7 @@ class ChannelRemoteRepositoryImpl(
     }
 
     override suspend fun getChannels(): Flow<List<Channel>> = flow {
-        updateChannelIDs().collect{
+        updateChannelIDs().collect {
             val list = getChannelsList()
             Log.d(TAG, "getChannels: done")
             emit(list)
@@ -90,15 +89,15 @@ class ChannelRemoteRepositoryImpl(
                 .document(auth.currentUser!!.uid)
                 .delete()
 
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "leaveChannel: ", e)
         }
     }
 
     override suspend fun getChannel(channelID: String): Channel {
-        var channel = firestore.collection(COLLECTION_CHANNEL).document(channelID).get().await().toObject<Channel>()
-        if(channel == null){
+        var channel = firestore.collection(COLLECTION_CHANNEL).document(channelID).get().await()
+            .toObject<Channel>()
+        if (channel == null) {
             Log.d(TAG, "getChannel: new")
             channel = Channel(
                 channelID = channelID,
@@ -119,10 +118,10 @@ class ChannelRemoteRepositoryImpl(
                 .document(channel.channelID)
                 .set(ChannelID(id = channel.channelID))
 
-            userRepository.getCurrentUser().collect{
-                if(it is Resource.Success){
+            userRepository.getCurrentUser().collect {
+                if (it is Resource.Success) {
                     val user = it.data
-                    if(user !in channel.users)
+                    if (user !in channel.users)
                         channel.users.add(user!!)
                 }
             }
@@ -131,8 +130,7 @@ class ChannelRemoteRepositoryImpl(
                 .document(channel.channelID)
                 .set(channel)
 
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "joinChannel: ", e)
         }
     }

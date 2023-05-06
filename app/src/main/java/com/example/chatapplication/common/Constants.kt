@@ -11,6 +11,6 @@ object Constants {
     const val SIGN_IN_REQUEST = "signInRequest"
     const val SIGN_UP_REQUEST = "signUpRequest"
     const val UNKNOWN_ERROR = "Something went wrong"
-    const val LOCAL =  "local"
+    const val LOCAL = "local"
     const val REMOTE = "remote"
 }

@@ -7,15 +7,17 @@ import com.example.chatapplication.domain.repository.MessageRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
-class DeleteMessage(private val repository: MessageRepository, private val workerUtils: WorkerUtils) {
+class DeleteMessage(
+    private val repository: MessageRepository,
+    private val workerUtils: WorkerUtils,
+) {
     operator fun invoke(message: Message): Flow<Resource<Boolean>> = flow {
-        try{
+        try {
             emit(Resource.Loading)
             repository.deleteMessage(message)
             workerUtils.deleteMessage(message)
             emit(Resource.Success(true))
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error"))
         }
     }

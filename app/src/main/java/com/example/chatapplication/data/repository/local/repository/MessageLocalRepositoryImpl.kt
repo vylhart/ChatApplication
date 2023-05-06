@@ -5,7 +5,7 @@ import com.example.chatapplication.domain.model.Message
 import com.example.chatapplication.domain.repository.MessageRepository
 import kotlinx.coroutines.flow.Flow
 
-class MessageLocalRepositoryImpl(private val dao: MessageDao): MessageRepository {
+class MessageLocalRepositoryImpl(private val dao: MessageDao) : MessageRepository {
     override suspend fun getMessages(channel: String): Flow<List<Message>> {
         return dao.getMessages(channel)
     }
@@ -17,5 +17,4 @@ class MessageLocalRepositoryImpl(private val dao: MessageDao): MessageRepository
     override suspend fun sendMessage(message: Message) {
         return dao.insertMessage(message)
     }
-
 }

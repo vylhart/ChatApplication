@@ -36,7 +36,7 @@ import com.example.chatapplication.presentation.screens.main.BottomBar
 fun ContactScreen(navController: NavHostController, viewModel: ContactViewModel = hiltViewModel()) {
     val state by viewModel.contactList.collectAsState()
     PermissionScreen(viewModel)
-    ContactScreenContent(navController = navController,state.toList()) {
+    ContactScreenContent(navController = navController, state.toList()) {
         viewModel.joinChannel(it) { channelID ->
             navController.navigate(Screen.MessageScreen.route + "/$channelID")
         }
@@ -48,11 +48,17 @@ fun ContactScreen(navController: NavHostController, viewModel: ContactViewModel 
 fun ContactScreenContent(
     navController: NavHostController,
     state: List<Contact>,
-    onClick: (Contact) -> Unit,){
-    Scaffold(topBar = { BottomBar(navController = navController, featureColor = getFeatureColor()) }) {
+    onClick: (Contact) -> Unit,
+) {
+    Scaffold(topBar = {
+        BottomBar(
+            navController = navController,
+            featureColor = getFeatureColor()
+        )
+    }) {
         BackGroundCompose {
-            LazyColumn(modifier = Modifier.fillMaxSize()){
-                items(state){ contact ->
+            LazyColumn(modifier = Modifier.fillMaxSize()) {
+                items(state) { contact ->
                     ContactItem(contact = contact, onClick)
                 }
             }
@@ -61,9 +67,10 @@ fun ContactScreenContent(
 }
 
 @Composable
-fun ContactItem(contact: Contact, onClick: (Contact) -> Unit){
+fun ContactItem(contact: Contact, onClick: (Contact) -> Unit) {
     Spacer(modifier = Modifier.padding(10.dp))
-    Row(modifier = Modifier.clickable { onClick(contact) }
+    Row(modifier = Modifier
+        .clickable { onClick(contact) }
         .fillMaxWidth()
         .height(45.dp))
 
@@ -93,10 +100,10 @@ fun PermissionScreen(viewModel: ContactViewModel) {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            Log.d("ExampleScreen","PERMISSION GRANTED")
+            Log.d("ExampleScreen", "PERMISSION GRANTED")
             viewModel.getContacts()
         } else {
-            Log.d("ExampleScreen","PERMISSION DENIED")
+            Log.d("ExampleScreen", "PERMISSION DENIED")
         }
     }
     val context = LocalContext.current
@@ -117,6 +124,6 @@ fun PermissionScreen(viewModel: ContactViewModel) {
 
 @Preview(showBackground = true)
 @Composable
-fun PreviewContact(){
+fun PreviewContact() {
     ContactItem(contact = Contact("Shashank", "8874857282"), onClick = {})
 }

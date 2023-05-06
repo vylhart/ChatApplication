@@ -13,7 +13,7 @@ import com.example.chatapplication.domain.model.Message
 
 @Database(entities = [Message::class, Channel::class, Contact::class], version = 1)
 @TypeConverters(ListConverter::class)
-abstract class MessageDatabase: RoomDatabase() {
+abstract class MessageDatabase : RoomDatabase() {
     abstract val messageDao: MessageDao
     abstract val channelDao: ChannelDao
     abstract val contactDao: ContactDao

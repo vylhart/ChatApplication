@@ -22,7 +22,11 @@ object ChannelModule {
     @Singleton
     @Provides
     @Named("remote")
-    fun provideChannelRemoteRepository(auth: FirebaseAuth, firestore: FirebaseFirestore, userRepository: UserRepository): ChannelRepository {
+    fun provideChannelRemoteRepository(
+        auth: FirebaseAuth,
+        firestore: FirebaseFirestore,
+        userRepository: UserRepository,
+    ): ChannelRepository {
         return ChannelRemoteRepositoryImpl(auth, firestore, userRepository)
     }
 
@@ -40,10 +44,16 @@ object ChannelModule {
         @Named("remote") remoteRepository: ChannelRepository,
     ): ChannelUseCases {
         return ChannelUseCases(
-            getChannelsFromNetwork = GetChannelsFromNetwork(localRepository = localRepository, remoteRepository = remoteRepository),
+            getChannelsFromNetwork = GetChannelsFromNetwork(
+                localRepository = localRepository,
+                remoteRepository = remoteRepository
+            ),
             getChannelsFromLocalDB = GetChannelsFromLocalDB(localRepository),
             joinChannel = JoinChannel(repository = remoteRepository),
-            leaveChannel = LeaveChannel(localRepository = localRepository, remoteRepository = remoteRepository)
+            leaveChannel = LeaveChannel(
+                localRepository = localRepository,
+                remoteRepository = remoteRepository
+            )
         )
     }
 }

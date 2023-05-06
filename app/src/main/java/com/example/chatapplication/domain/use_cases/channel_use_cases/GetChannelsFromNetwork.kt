@@ -6,19 +6,18 @@ import com.example.chatapplication.domain.repository.ChannelRepository
 
 class GetChannelsFromNetwork(
     private val localRepository: ChannelRepository,
-    private val remoteRepository: ChannelRepository
-    ) {
-    suspend operator fun invoke(){
-        try{
+    private val remoteRepository: ChannelRepository,
+) {
+    suspend operator fun invoke() {
+        try {
             Log.d(TAG, "invoke: n/w")
-            remoteRepository.getChannels().collect{
-                for(channel in it){
+            remoteRepository.getChannels().collect {
+                for (channel in it) {
                     Log.d(TAG, "invoke: ${channel.channelID}")
                     localRepository.joinChannel(channel)
                 }
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.e(TAG, "invoke: n/w", e)
         }
     }

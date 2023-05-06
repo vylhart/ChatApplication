@@ -18,21 +18,20 @@ class ContactWorker @AssistedInject constructor(
     @Assisted context: Context,
     @Assisted params: WorkerParameters,
     @Named(REMOTE) private val remoteRepository: ContactRepository,
-    @Named(LOCAL)  private val localRepository: ContactRepository,
-): CoroutineWorker(context, params) {
-
+    @Named(LOCAL) private val localRepository: ContactRepository,
+) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        return try{
+        return try {
             Log.d(TAG, "doWork: ")
-            remoteRepository.getContacts().collect{ list ->
+            remoteRepository.getContacts().collect { list ->
                 list.map {
                     Log.d(TAG, "doWork: ${it.name}")
                     localRepository.addContact(it)
                 }
             }
             Result.success()
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure()
         }
     }

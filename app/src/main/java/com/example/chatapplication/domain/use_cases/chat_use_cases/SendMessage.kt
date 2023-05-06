@@ -13,8 +13,7 @@ class SendMessage(private val repository: MessageRepository, private val workerU
             repository.sendMessage(message)
             workerUtils.sendMessage(message)
             emit(Resource.Success(true))
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             emit(Resource.Error(e.localizedMessage ?: "An unexpected error"))
         }
     }

@@ -15,7 +15,8 @@ import dagger.hilt.android.scopes.ViewModelScoped
 object AuthModule {
     @Provides
     @ViewModelScoped
-    fun providePhoneAuthRepository(auth: FirebaseAuth
+    fun providePhoneAuthRepository(
+        auth: FirebaseAuth,
     ): AuthRepository = PhoneAuthRepositoryImpl(
         auth = auth
     )

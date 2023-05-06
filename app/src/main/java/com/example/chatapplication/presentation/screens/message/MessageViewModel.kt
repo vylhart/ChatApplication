@@ -22,61 +22,73 @@ import javax.inject.Inject
 class MessageViewModel @Inject constructor(
     private val chatUseCases: ChatUseCases,
     auth: FirebaseAuth,
-    savedStateHandle: SavedStateHandle
-    ): ViewModel() {
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
 
     var state = MutableStateFlow(MessageState())
         private set
 
-    init{
+    init {
         val channel = savedStateHandle.get<String>(CHANNEL_ID) ?: "random_channel"
         Log.d(TAG, "enterChannel: $channel")
-        val userId  = auth.currentUser?.uid ?: "random"
+        val userId = auth.currentUser?.uid ?: "random"
         state.value = MessageState(channelId = channel, userId = userId)
         getMessages()
     }
 
-    fun sendMessage(text: String){
-        if(text.isEmpty())  return
+    fun sendMessage(text: String) {
+        if (text.isEmpty()) return
         Log.d(TAG, "sendMessage: sending")
         viewModelScope.launch {
             chatUseCases.run {
                 sendMessage(
-                        message =  Message(
-                            senderId = state.value.userId,
-                            channelId = state.value.channelId,
-                            messageId = UUID.randomUUID().toString(),
-                            data = text,
-                            date = System.currentTimeMillis()
-                        )
-                    ).collect{}
+                    message = Message(
+                        senderId = state.value.userId,
+                        channelId = state.value.channelId,
+                        messageId = UUID.randomUUID().toString(),
+                        data = text,
+                        date = System.currentTimeMillis()
+                    )
+                ).collect {}
             }
         }
     }
 
-    fun deleteMessage(message: Message){
+    fun deleteMessage(message: Message) {
         viewModelScope.launch {
             chatUseCases.deleteMessage(message)
         }
     }
 
-    private fun getMessages(){
-        viewModelScope.launch{
+    private fun getMessages() {
+        viewModelScope.launch {
             chatUseCases.getMessagesFromNetwork(state.value.channelId)
         }
         chatUseCases.getMessagesFromLocalDB(state.value.channelId).onEach { result ->
-            when(result){
+            when (result) {
                 is Resource.Success -> {
                     Log.d(TAG, "getMessages: Success")
-                    state.value = MessageState(messages = result.data, channelId = state.value.channelId, userId = state.value.userId)
+                    state.value = MessageState(
+                        messages = result.data,
+                        channelId = state.value.channelId,
+                        userId = state.value.userId
+                    )
                 }
                 is Resource.Loading -> {
                     Log.d(TAG, "getMessages: Loading")
-                    state.value = MessageState(isLoading = true, channelId = state.value.channelId, userId = state.value.userId)
+                    state.value = MessageState(
+                        isLoading = true,
+                        channelId = state.value.channelId,
+                        userId = state.value.userId
+                    )
                 }
                 is Resource.Error -> {
                     Log.d(TAG, "getMessages: Error")
-                    state.value = MessageState(error = result.message, channelId = state.value.channelId, userId = state.value.userId)
+                    state.value = MessageState(
+                        error = result.message,
+                        channelId = state.value.channelId,
+                        userId = state.value.userId
+                    )
                 }
             }
         }.launchIn(viewModelScope)

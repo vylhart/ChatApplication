@@ -10,7 +10,7 @@ import androidx.compose.ui.Modifier
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 
 @Composable
-fun BackGroundCompose(content: @Composable (FeatureColor)-> Unit){
+fun BackGroundCompose(content: @Composable (FeatureColor) -> Unit) {
     val featureColor = getFeatureColor()
     val systemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(

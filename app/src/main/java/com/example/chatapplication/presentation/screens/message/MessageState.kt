@@ -7,5 +7,5 @@ data class MessageState(
     val messages: List<Message> = emptyList(),
     val error: String = "",
     val userId: String = "random",
-    val channelId: String = "random"
+    val channelId: String = "random",
 )

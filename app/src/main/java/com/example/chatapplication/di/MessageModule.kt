@@ -23,7 +23,11 @@ object MessageModule {
 
     @Singleton
     @Provides
-    fun provideMessageUseCases(@Named("Local") repository: MessageRepository, @Named("Remote") remoteRepository: MessageRepository, workerUtils: WorkerUtils): ChatUseCases {
+    fun provideMessageUseCases(
+        @Named("Local") repository: MessageRepository,
+        @Named("Remote") remoteRepository: MessageRepository,
+        workerUtils: WorkerUtils,
+    ): ChatUseCases {
         return ChatUseCases(
             deleteMessage = DeleteMessage(repository, workerUtils),
             sendMessage = SendMessage(repository, workerUtils),
@@ -35,7 +39,8 @@ object MessageModule {
     @Singleton
     @Provides
     fun provideMessageDatabase(app: Application): MessageDatabase {
-        return Room.databaseBuilder(app, MessageDatabase::class.java, Constants.DATABASE_NAME).build()
+        return Room.databaseBuilder(app, MessageDatabase::class.java, Constants.DATABASE_NAME)
+            .build()
     }
 
     @Singleton

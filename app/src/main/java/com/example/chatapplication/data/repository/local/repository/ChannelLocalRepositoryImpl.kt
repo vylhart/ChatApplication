@@ -5,7 +5,7 @@ import com.example.chatapplication.domain.model.Channel
 import com.example.chatapplication.domain.repository.ChannelRepository
 import kotlinx.coroutines.flow.Flow
 
-class ChannelLocalRepositoryImpl(private val dao: ChannelDao): ChannelRepository {
+class ChannelLocalRepositoryImpl(private val dao: ChannelDao) : ChannelRepository {
     override suspend fun getChannels(): Flow<List<Channel>> {
         return dao.getChannels()
     }

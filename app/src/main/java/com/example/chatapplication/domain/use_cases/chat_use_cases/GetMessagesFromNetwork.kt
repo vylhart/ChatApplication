@@ -6,17 +6,17 @@ import com.example.chatapplication.domain.repository.MessageRepository
 
 class GetMessagesFromNetwork(
     private val localRepository: MessageRepository,
-    private val remoteRepository: MessageRepository) {
+    private val remoteRepository: MessageRepository,
+) {
     suspend operator fun invoke(channel: String) {
         Log.d(TAG, "invoke: fetch")
-        try{
-            remoteRepository.getMessages(channel).collect{
-                for(msg in it){
+        try {
+            remoteRepository.getMessages(channel).collect {
+                for (msg in it) {
                     localRepository.sendMessage(msg)
                 }
             }
-        }
-        catch (e: Exception){
+        } catch (e: Exception) {
             Log.d(TAG, (e.localizedMessage ?: "An unexpected error"))
         }
     }

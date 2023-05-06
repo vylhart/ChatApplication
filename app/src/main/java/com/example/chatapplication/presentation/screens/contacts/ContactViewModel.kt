@@ -14,14 +14,14 @@ import javax.inject.Inject
 @HiltViewModel
 class ContactViewModel @Inject constructor(
     private val auth: FirebaseAuth,
-    private val useCases: ContactUseCases
-    ): ViewModel() {
+    private val useCases: ContactUseCases,
+) : ViewModel() {
     var contactList = MutableStateFlow(listOf<Contact>())
-    private set
+        private set
 
-    fun getContacts(){
+    fun getContacts() {
         viewModelScope.launch {
-            useCases.getContacts().collect{
+            useCases.getContacts().collect {
                 contactList.value = it
             }
         }
@@ -29,7 +29,8 @@ class ContactViewModel @Inject constructor(
 
     fun joinChannel(contact: Contact, callback: (String) -> Unit) {
         val number = auth.currentUser!!.phoneNumber!!
-        val channelID = if(number < contact.number) number+contact.number else contact.number+number
+        val channelID =
+            if (number < contact.number) number + contact.number else contact.number + number
         callback(channelID)
     }
 }

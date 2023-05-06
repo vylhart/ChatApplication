@@ -8,6 +8,6 @@ data class Contact(
     @PrimaryKey
     val uid: String = "",
     val number: String = "",
-    val name:String = "",
+    val name: String = "",
     val photoURL: String? = null,
 )

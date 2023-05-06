@@ -16,7 +16,7 @@ object FirebaseModule {
     @Singleton
     @Provides
     fun provideContext(
-        app: Application
+        app: Application,
     ): Context = app.applicationContext
 
 

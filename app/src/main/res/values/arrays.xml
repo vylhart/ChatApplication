@@ -1,0 +1,9 @@
+<resources>
+    <string-array name="country_codes">
+        <item>+1</item>
+        <item>+44</item>
+        <item>+91</item>
+        <item>+86</item>
+        <!-- Add more country codes here -->
+    </string-array>
+</resources>
