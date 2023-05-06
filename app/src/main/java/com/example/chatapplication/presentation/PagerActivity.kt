@@ -50,9 +50,9 @@ class PagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> ChatFragment.newInstance()
-            1 -> ChatFragment.newInstance()
-            2 -> ChatFragment.newInstance()
+            0 -> ChatFragment()
+            1 -> ChatFragment()
+            2 -> ChatFragment()
             else -> throw IllegalArgumentException("Invalid position")
         }
     }

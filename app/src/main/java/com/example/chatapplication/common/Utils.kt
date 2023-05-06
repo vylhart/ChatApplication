@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
 import android.provider.ContactsContract.CommonDataKinds.Phone
+import android.text.format.DateUtils
 import android.util.Log
 import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.domain.model.Contact
@@ -48,6 +49,11 @@ fun getPhoneContacts(app: Application): List<Contact> {
     return list.distinctBy { it.number }
 }
 
-fun LOG(context: Context, message: String){
-    Log.i(TAG+context.javaClass.simpleName, message)
+fun getRelativeTime(time: Long): CharSequence? {
+    return DateUtils.getRelativeTimeSpanString(time, System.currentTimeMillis(), DateUtils.MINUTE_IN_MILLIS)
+}
+
+fun getDummyImageUrl(): String {
+    return "https://th.bing.com/th/id/OIP.TIj6JUk1HVR1e2c0E-2xPgAAAA?pid=ImgDet&rs=1"
+
 }
