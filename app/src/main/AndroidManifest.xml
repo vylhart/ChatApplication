@@ -17,6 +17,9 @@
         android:theme="@style/Theme.ChatApplication"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".presentation.PagerActivity"
+            android:exported="true" />
 
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
@@ -24,7 +27,6 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/purple_700" />
-
 
         <service
             android:name=".data.repository.remote.FCMService"
@@ -34,23 +36,20 @@
             </intent-filter>
         </service>
 
-
         <activity
             android:name=".presentation.MainActivity"
             android:exported="true"
             android:theme="@style/Theme.ChatApplication">
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-
         <activity
             android:name=".presentation.LoginActivity"
-            android:exported="true"
-            android:theme="@style/Theme.AppCompat">
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -1,5 +1,6 @@
 package com.example.chatapplication.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -48,6 +49,8 @@ class LoginActivity : AppCompatActivity() {
                 is LoginStage.SignUp -> binding.nameLayout.visibility = View.VISIBLE
                 is LoginStage.SignedIn -> {
                     Log.i(TAG, "setUpObservers: success login")
+                    startActivity(Intent(this, PagerActivity::class.java))
+                    finish()
                 }
             }
         }
