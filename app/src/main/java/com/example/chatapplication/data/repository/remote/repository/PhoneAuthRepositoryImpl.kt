@@ -5,8 +5,7 @@ import android.util.Log
 import com.example.chatapplication.common.Constants
 import com.example.chatapplication.common.Resource
 import com.example.chatapplication.domain.repository.AuthRepository
-import com.example.chatapplication.presentation.LoginActivity
-import com.example.chatapplication.presentation.MainActivity
+import com.example.chatapplication.presentation.activities.LoginActivity
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import kotlinx.coroutines.channels.awaitClose

@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="80dp">
 
-        <com.example.chatapplication.presentation.UserImageView
+        <com.example.chatapplication.presentation.views.UserImageView
             android:id="@+id/image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

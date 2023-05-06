@@ -1,15 +1,13 @@
 package com.example.chatapplication.presentation
 
-import android.graphics.drawable.ColorDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.example.chatapplication.R
 import com.example.chatapplication.databinding.ActivityPagerBinding
-import com.google.android.material.tabs.TabLayout
+import com.example.chatapplication.presentation.fragments.ChatFragment
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

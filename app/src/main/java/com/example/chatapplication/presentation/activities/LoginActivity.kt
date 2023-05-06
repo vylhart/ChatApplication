@@ -1,4 +1,4 @@
-package com.example.chatapplication.presentation
+package com.example.chatapplication.presentation.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.chatapplication.common.Constants.TAG
 import com.example.chatapplication.databinding.LoginActivityBinding
+import com.example.chatapplication.presentation.viewmodels.LoginViewModel
+import com.example.chatapplication.presentation.PagerActivity
 import com.example.chatapplication.presentation.screens.auth.LoginStage
 import dagger.hilt.android.AndroidEntryPoint
 

@@ -1,4 +1,4 @@
-package com.example.chatapplication.presentation
+package com.example.chatapplication.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet

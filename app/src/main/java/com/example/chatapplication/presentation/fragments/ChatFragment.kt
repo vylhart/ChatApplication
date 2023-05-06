@@ -1,4 +1,4 @@
-package com.example.chatapplication.presentation
+package com.example.chatapplication.presentation.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.chatapplication.databinding.FragmentChatBinding
 import com.example.chatapplication.domain.model.Channel
+import com.example.chatapplication.presentation.PagerViewModel
 import com.example.chatapplication.presentation.adapters.ChannelAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
